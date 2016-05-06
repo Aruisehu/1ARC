@@ -6,8 +6,8 @@ Ressources :
 
 Git :
 
-git pull -> récupérer les modifications
+* git pull -> récupérer les modifications
 
-git add -A -> ajoute tous les fichiers à l'index de git
-git commit -m "message de commit" -> créé un commit
-git push -> envoyer les modifications
+* git add -A -> ajoute tous les fichiers à l'index de git
+* git commit -m "message de commit" -> créé un commit
+* git push -> envoyer les modifications
