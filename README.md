@@ -1,4 +1,4 @@
-Ressources :
+﻿Ressources :
 
 * http://www.gabrielececchetti.it/Teaching/CalcolatoriElettronici/Docs/i8086_and_DOS_interrupts.pdf
 * http://a.michelizza.free.fr/pmwiki.php?n=TutoOS.TutoOS
@@ -11,3 +11,7 @@ Git :
 * git add -A -> ajoute tous les fichiers à l'index de git
 * git commit -m "message de commit" -> créé un commit
 * git push -> envoyer les modifications
+
+Way to Code:
+
+We use MASM assembly (it's the way we learned to code in assembly), so we are searching for MASM tutorial.
