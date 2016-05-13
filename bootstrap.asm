@@ -22,8 +22,22 @@
 ;       unless you manually replace them in interrupt vector table.
 ;       (refer to global memory map in documentation)
 
-
+;dummy code 
 org 7c00h      ; set location counter.
+
+jmp boot 
+
+etiq:
+mov ah, 0
+int 16h
+cmp ah, 1
+je fin
+mov ah, 0Eh
+int 10h
+jmp etiq
+
+fin:
+ret
 
 boot:
 mov ax, 0 ; Reset floppy system
@@ -44,18 +58,8 @@ jmp boot  ; else retry
 
 exit:
 db 510-($-boot)dup(0) ; Put 0 in the memory
-dw 0xAA55 ; Way to stop bootstrap
+dw 0xAA55 ; Way to stop bootstrap  
+int 19h
 
-;dummy code
-etiq:
-mov ah, 0
-int 16h
-cmp ah, 1
-je fin
-mov ah, 0Eh
-int 10h
-jmp etiq
 
-fin:
-ret
 
