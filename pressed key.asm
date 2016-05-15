@@ -1,7 +1,17 @@
 org 100h 
-
+;piano plays with azertyui
 call print_piano
-
+press_key:
+mov ah, 0
+int 16h ; wait for a pressed key
+mov bx, offset pressed_key
+cmp ah, 1 ; escape pressed, we quit the program
+je endf
+sub ah, 10h
+mov [bx], ah
+call print_piano
+jmp press_key
+endf:
 ret
 print_piano PROC
     mov bx, offset column
@@ -12,17 +22,25 @@ print_piano PROC
     mov bh, 0
     mov ah, 2
     int 10h ; puts the cursor on the first column, first row
-    mov cx, 8; use as a counter
+    mov cx, 0; use as a counter
     key:
+    mov bx, offset color
+    mov [bx], 00001111b
     mov bx, offset row
     mov [bx], 0 ; restore the value of the row
+    mov bx, offset pressed_key
+    cmp [bx], cl
+    jnz continue:
+    mov bx, offset color
+    mov [bx], 00000100b
+    continue:
     push cx ; save the value of the counter
     call print_key
     pop cx ; restore this value
     mov bx, offset key_off
     add [bx], 7 ; use to change key
-    dec cx
-    cmp cx, 0
+    inc cx
+    cmp cx, 8
     jnz key ;loop
     ret
 print_piano ENDP
@@ -128,4 +146,4 @@ color db 00001111b
 column db 0 ; must change value in code to display other touch
 row db 0 
 key_off db 0
-key_buffer db 0
+pressed_key db 12h
