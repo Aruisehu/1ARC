@@ -1,0 +1,84 @@
+EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
+ 
+bootstrap.bin -- emu8086 assembler version: 4.03  
+ 
+[ 16/05/2016  --  01:23:36 ] 
+ 
+===================================================================================================
+[LINE]     LOC: MACHINE CODE                          SOURCE
+===================================================================================================
+ 
+[   1]        :                                       ; BIOS reads 512 bytes from cylinder: 0, head: 0, sector: 1
+[   2]        :                                       ; of bootable floppy drive, then it loads this data into
+[   3]        :                                       ; memory at 0000:7c00h and starts the execution from the first byte.
+[   4]        :                                       
+[   5]        :                                       ; note: this file is assembled into .bin file.
+[   6]        :                                       ;       default configuration for .binf file:
+[   7]        :                                       ;       load segment: 0000, load offset: 7c00,
+[   8]        :                                       ;       same values are set to CS and IP registers accordingly.
+[   9]        :                                       
+[  10]        :                                       ; .binf file is used by the emulator to decide at what memory
+[  11]        :                                       ; address to load binary file and start the execution, when
+[  12]        :                                       ; loading address is set to 0000:7c00 it emulates the way BIOS
+[  13]        :                                       ; loads the boot record into the memory.
+[  14]        :                                       
+[  15]        :                                       ; the output of this format is identical to format created from
+[  16]        :                                       ; bin template, both templates create plain binary files.
+[  17]        :                                       ; .boot output type is outdated because of its redundancy.
+[  18]        :                                       ; you can write .bin file to boot record of a real
+[  19]        :                                       ; floppy drive using writebin.asm (it's required to assemble this file first)
+[  20]        :                                       
+[  21]        :                                       ; note: you may not use dos interrupts for boot record code,
+[  22]        :                                       ;       unless you manually replace them in interrupt vector table.
+[  23]        :                                       ;       (refer to global memory map in documentation)
+[  24]        :                                       
+[  25]        :                                       ;dummy code
+[  26]        :                                       
+[  27]    0000:                                       deb:
+[  28]        :                                       org 7c00h      ; set location counter.
+[  29]        :                                       
+[  30]    7C00: EB 10                                 jmp boot
+[  31]        :                                       
+[  32]    7C02:                                       etiq:
+[  33]    7C02: B4 00                                 mov ah, 0
+[  34]    7C04: CD 16                                 int 16h
+[  35]    7C06: 80 FC 01                              cmp ah, 1
+[  36]    7C09: 74 06                                 je fin
+[  37]    7C0B: B4 0E                                 mov ah, 0Eh
+[  38]    7C0D: CD 10                                 int 10h
+[  39]    7C0F: EB F1                                 jmp etiq
+[  40]        :                                       
+[  41]    7C11:                                       fin:
+[  42]    7C11: C3                                    ret
+[  43]        :                                       
+[  44]    7C12:                                       boot:
+[  45]    7C12: B8 00 00                              mov ax, 0 ; Reset floppy system
+[  46]    7C15: CD 13                                 int 13h
+[  47]        :                                       
+[  48]    7C17: 8C D8                                 mov ax, ds
+[  49]    7C19: 8E C0                                 mov es, ax
+[  50]    7C1B: BB 02 7C                              mov bx, etiq ; Point to the code to load
+[  51]    7C1E: B2 00                                 mov dl, 0 ; Floppy Number
+[  52]    7C20: B6 00                                 mov dh, 0 ; Head Number
+[  53]    7C22: B5 00                                 mov ch, 0 ; Cylinder number
+[  54]    7C24: B1 01                                 mov cl, 1 ; Sector Number
+[  55]    7C26: B0 01                                 mov al, 1 ; Number of sector to load
+[  56]    7C28: B4 02                                 mov ah, 2 ; set the interruption mode
+[  57]    7C2A: CD 13                                 int 13h   ; Load code pointed in RAM
+[  58]        :                                       
+[  59]    7C2C:                                       exit:
+[  60]    7C2C:                                       db 510-(exit-deb) dup (0) ; Put 0 in the memory
+[  61]    7C2C: 55 AA                                 dw 0xAA55 ; Way to stop bootstrap
+[  62]        :                                       
+[  63]        :                                       
+[  64]        :                                       
+[  65]        :                                       
+[  66]        :                                       
+ 
+===================================================================================================
+ 
+
+
+
+
+===================================================================================================
