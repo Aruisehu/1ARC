@@ -21,8 +21,8 @@
 ; note: you may not use dos interrupts for boot record code,
 ;       unless you manually replace them in interrupt vector table.
 ;       (refer to global memory map in documentation)
-
-;dummy code 
+;dummy code
+ 
 org 7c00h      ; set location counter.
 
 jmp boot 
@@ -53,13 +53,14 @@ mov cl, 1 ; Sector Number
 mov al, 1 ; Number of sector to load
 mov ah, 2 ; set the interruption mode
 int 13h   ; Load code pointed in RAM 
-jnc exit  ; If succeded jump to exit
+jnc exit
 jmp boot  ; else retry
 
 exit:
-db 510-($-boot)dup(0) ; Put 0 in the memory
+ret
+
+db 507-(offset exit-offset etiq) dup (00h) ; Put 0 in the memory
 dw 0xAA55 ; Way to stop bootstrap  
-int 19h
 
 
 

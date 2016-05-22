@@ -2,7 +2,7 @@ EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
  
 bootstrap.bin -- emu8086 assembler version: 4.03  
  
-[ 16/05/2016  --  01:23:36 ] 
+[ 22/05/2016  --  16:23:02 ] 
  
 ===================================================================================================
 [LINE]     LOC: MACHINE CODE                          SOURCE
@@ -31,49 +31,89 @@ bootstrap.bin -- emu8086 assembler version: 4.03
 [  21]        :                                       ; note: you may not use dos interrupts for boot record code,
 [  22]        :                                       ;       unless you manually replace them in interrupt vector table.
 [  23]        :                                       ;       (refer to global memory map in documentation)
-[  24]        :                                       
-[  25]        :                                       ;dummy code
-[  26]        :                                       
-[  27]    0000:                                       deb:
-[  28]        :                                       org 7c00h      ; set location counter.
+[  24]        :                                       ;dummy code
+[  25]        :                                       
+[  26]        :                                       org 7c00h      ; set location counter.
+[  27]        :                                       
+[  28]    7C00: EB 10                                 jmp boot
 [  29]        :                                       
-[  30]    7C00: EB 10                                 jmp boot
-[  31]        :                                       
-[  32]    7C02:                                       etiq:
-[  33]    7C02: B4 00                                 mov ah, 0
-[  34]    7C04: CD 16                                 int 16h
-[  35]    7C06: 80 FC 01                              cmp ah, 1
-[  36]    7C09: 74 06                                 je fin
-[  37]    7C0B: B4 0E                                 mov ah, 0Eh
-[  38]    7C0D: CD 10                                 int 10h
-[  39]    7C0F: EB F1                                 jmp etiq
-[  40]        :                                       
-[  41]    7C11:                                       fin:
-[  42]    7C11: C3                                    ret
-[  43]        :                                       
-[  44]    7C12:                                       boot:
-[  45]    7C12: B8 00 00                              mov ax, 0 ; Reset floppy system
-[  46]    7C15: CD 13                                 int 13h
-[  47]        :                                       
-[  48]    7C17: 8C D8                                 mov ax, ds
-[  49]    7C19: 8E C0                                 mov es, ax
-[  50]    7C1B: BB 02 7C                              mov bx, etiq ; Point to the code to load
-[  51]    7C1E: B2 00                                 mov dl, 0 ; Floppy Number
-[  52]    7C20: B6 00                                 mov dh, 0 ; Head Number
-[  53]    7C22: B5 00                                 mov ch, 0 ; Cylinder number
-[  54]    7C24: B1 01                                 mov cl, 1 ; Sector Number
-[  55]    7C26: B0 01                                 mov al, 1 ; Number of sector to load
-[  56]    7C28: B4 02                                 mov ah, 2 ; set the interruption mode
-[  57]    7C2A: CD 13                                 int 13h   ; Load code pointed in RAM
+[  30]    7C02:                                       etiq:
+[  31]    7C02: B4 00                                 mov ah, 0
+[  32]    7C04: CD 16                                 int 16h
+[  33]    7C06: 80 FC 01                              cmp ah, 1
+[  34]    7C09: 74 06                                 je fin
+[  35]    7C0B: B4 0E                                 mov ah, 0Eh
+[  36]    7C0D: CD 10                                 int 10h
+[  37]    7C0F: EB F1                                 jmp etiq
+[  38]        :                                       
+[  39]    7C11:                                       fin:
+[  40]    7C11: C3                                    ret
+[  41]        :                                       
+[  42]    7C12:                                       boot:
+[  43]    7C12: B8 00 00                              mov ax, 0 ; Reset floppy system
+[  44]    7C15: CD 13                                 int 13h
+[  45]        :                                       
+[  46]    7C17: 8C D8                                 mov ax, ds
+[  47]    7C19: 8E C0                                 mov es, ax
+[  48]    7C1B: BB 02 7C                              mov bx, etiq ; Point to the code to load
+[  49]    7C1E: B2 00                                 mov dl, 0 ; Floppy Number
+[  50]    7C20: B6 00                                 mov dh, 0 ; Head Number
+[  51]    7C22: B5 00                                 mov ch, 0 ; Cylinder number
+[  52]    7C24: B1 01                                 mov cl, 1 ; Sector Number
+[  53]    7C26: B0 01                                 mov al, 1 ; Number of sector to load
+[  54]    7C28: B4 02                                 mov ah, 2 ; set the interruption mode
+[  55]    7C2A: CD 13                                 int 13h   ; Load code pointed in RAM
+[  56]    7C2C: 73 02                                 jnc exit
+[  57]    7C2E: EB E2                                 jmp boot  ; else retry
 [  58]        :                                       
-[  59]    7C2C:                                       exit:
-[  60]    7C2C:                                       db 510-(exit-deb) dup (0) ; Put 0 in the memory
-[  61]    7C2C: 55 AA                                 dw 0xAA55 ; Way to stop bootstrap
-[  62]        :                                       
-[  63]        :                                       
+[  59]    7C30:                                       exit:
+[  60]    7C30: C3                                    ret
+[  61]        :                                       
+[  62]    7C31: 00 00 00 00 00 00 00 00 00 00 00 00   db 507-(offset exit-offset etiq) dup (00h) ; Put 0 in the memory
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00                      
+[  63]    7DFE: 55 AA                                 dw 0xAA55 ; Way to stop bootstrap
 [  64]        :                                       
 [  65]        :                                       
 [  66]        :                                       
+[  67]        :                                       
+[  68]        :                                       
  
 ===================================================================================================
  
