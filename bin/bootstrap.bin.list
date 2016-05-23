@@ -2,7 +2,7 @@ EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
  
 bootstrap.bin -- emu8086 assembler version: 4.03  
  
-[ 22/05/2016  --  16:23:02 ] 
+[ 23/05/2016  --  13:48:50 ] 
  
 ===================================================================================================
 [LINE]     LOC: MACHINE CODE                          SOURCE
@@ -35,41 +35,29 @@ bootstrap.bin -- emu8086 assembler version: 4.03
 [  25]        :                                       
 [  26]        :                                       org 7c00h      ; set location counter.
 [  27]        :                                       
-[  28]    7C00: EB 10                                 jmp boot
-[  29]        :                                       
-[  30]    7C02:                                       etiq:
-[  31]    7C02: B4 00                                 mov ah, 0
-[  32]    7C04: CD 16                                 int 16h
-[  33]    7C06: 80 FC 01                              cmp ah, 1
-[  34]    7C09: 74 06                                 je fin
-[  35]    7C0B: B4 0E                                 mov ah, 0Eh
-[  36]    7C0D: CD 10                                 int 10h
-[  37]    7C0F: EB F1                                 jmp etiq
-[  38]        :                                       
-[  39]    7C11:                                       fin:
-[  40]    7C11: C3                                    ret
-[  41]        :                                       
-[  42]    7C12:                                       boot:
-[  43]    7C12: B8 00 00                              mov ax, 0 ; Reset floppy system
-[  44]    7C15: CD 13                                 int 13h
-[  45]        :                                       
-[  46]    7C17: 8C D8                                 mov ax, ds
-[  47]    7C19: 8E C0                                 mov es, ax
-[  48]    7C1B: BB 02 7C                              mov bx, etiq ; Point to the code to load
-[  49]    7C1E: B2 00                                 mov dl, 0 ; Floppy Number
-[  50]    7C20: B6 00                                 mov dh, 0 ; Head Number
-[  51]    7C22: B5 00                                 mov ch, 0 ; Cylinder number
-[  52]    7C24: B1 01                                 mov cl, 1 ; Sector Number
-[  53]    7C26: B0 01                                 mov al, 1 ; Number of sector to load
-[  54]    7C28: B4 02                                 mov ah, 2 ; set the interruption mode
-[  55]    7C2A: CD 13                                 int 13h   ; Load code pointed in RAM
-[  56]    7C2C: 73 02                                 jnc exit
-[  57]    7C2E: EB E2                                 jmp boot  ; else retry
-[  58]        :                                       
-[  59]    7C30:                                       exit:
-[  60]    7C30: C3                                    ret
-[  61]        :                                       
-[  62]    7C31: 00 00 00 00 00 00 00 00 00 00 00 00   db 507-(offset exit-offset etiq) dup (00h) ; Put 0 in the memory
+[  28]    7C00:                                       boot:
+[  29]    7C00: B8 00 00                              mov ax, 0 ; Reset floppy system
+[  30]    7C03: CD 13                                 int 13h
+[  31]        :                                       
+[  32]    7C05: B8 00 4F                              mov ax, 4F00h
+[  33]    7C08: 8E C0                                 mov es, ax
+[  34]    7C0A: BB 00 0F                              mov bx, 0F00h ; Point to the code to load
+[  35]    7C0D: B2 00                                 mov dl, 0h ; Floppy Number
+[  36]    7C0F: B6 00                                 mov dh, 0h ; Head Number
+[  37]    7C11: B5 00                                 mov ch, 0h ; Cylinder number
+[  38]    7C13: B1 02                                 mov cl, 2h ; Sector Number
+[  39]    7C15: B0 02                                 mov al, 2 ; Number of sector to load
+[  40]    7C17: B4 02                                 mov ah, 2 ; set the interruption mode
+[  41]    7C19: CD 13                                 int 13h   ; Load code pointed in RAM
+[  42]    7C1B: 73 02                                 jnc exit
+[  43]    7C1D: EB E1                                 jmp boot  ; else retry
+[  44]        :                                       
+[  45]    7C1F:                                       exit:
+[  46]    7C1F: EA 00 0F 00 4F                        jmp 4F00h:0F00h
+[  47]    7C24: C3                                    ret
+[  48]        :                                       
+[  49]    7C25: 00 00 00 00 00 00 00 00 00 00 00 00   db 504-(offset exit-offset boot) dup (00h) ; Put 0 in the memory
+                00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -108,12 +96,24 @@ bootstrap.bin -- emu8086 assembler version: 4.03
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00                      
-[  63]    7DFE: 55 AA                                 dw 0xAA55 ; Way to stop bootstrap
+[  50]    7DFE: 55 AA                                 dw 0xAA55 ; Way to stop bootstrap
+[  51]        :                                       
+[  52]    7E00:                                       code:
+[  53]    7E00: B4 00                                 mov ah, 0
+[  54]    7E02: CD 16                                 int 16h
+[  55]    7E04: 80 FC 01                              cmp ah, 1
+[  56]    7E07: 74 06                                 je fin
+[  57]    7E09: B4 0E                                 mov ah, 0Eh
+[  58]    7E0B: CD 10                                 int 10h
+[  59]    7E0D: EB F1                                 jmp code
+[  60]        :                                       
+[  61]    7E0F:                                       fin:
+[  62]    7E0F: CD 20                                 int 20h
+[  63]        :                                       
 [  64]        :                                       
 [  65]        :                                       
 [  66]        :                                       
 [  67]        :                                       
-[  68]        :                                       
  
 ===================================================================================================
  
