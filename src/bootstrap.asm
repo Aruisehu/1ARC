@@ -25,20 +25,6 @@
  
 org 7c00h      ; set location counter.
 
-jmp boot 
-
-etiq:
-mov ah, 0
-int 16h
-cmp ah, 1
-je fin
-mov ah, 0Eh
-int 10h
-jmp etiq
-
-fin:
-ret
-
 boot:
 mov ax, 0 ; Reset floppy system
 int 13h
@@ -59,8 +45,20 @@ jmp boot  ; else retry
 exit:
 ret
 
-db 507-(offset exit-offset etiq) dup (00h) ; Put 0 in the memory
+db 509-(offset exit-offset boot) dup (00h) ; Put 0 in the memory
 dw 0xAA55 ; Way to stop bootstrap  
+
+etiq:
+mov ah, 0
+int 16h
+cmp ah, 1
+je fin
+mov ah, 0Eh
+int 10h
+jmp etiq
+
+fin:
+int 20h                                      
 
 
 
