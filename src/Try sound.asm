@@ -13,9 +13,9 @@ out 42h, al  ; Send the MSB
 in al, 61h   ; Get the 8255 Port Contence
 or al, 00000011h      
 out 61h, al  ;End able speaker and use clock channel 2 for input
-mov cx, 03h ; High order wait value
+mov cx, 13h ; High order wait value
 mov dx, 0D04h; Low order wait value
-mov ax, 86h;Wait service
+mov ah, 86h;Wait service
 int 15h        
 pop ax;restore Speaker state
 out 61h, al

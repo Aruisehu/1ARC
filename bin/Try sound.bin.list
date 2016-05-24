@@ -2,7 +2,7 @@ EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
  
 Try sound.bin -- emu8086 assembler version: 4.03  
  
-[ 24/05/2016  --  10:24:50 ] 
+[ 24/05/2016  --  15:09:42 ] 
  
 ===================================================================================================
 [LINE]     LOC: MACHINE CODE                          SOURCE
@@ -23,17 +23,17 @@ Try sound.bin -- emu8086 assembler version: 4.03
 [  13]    7C12: E4 61                                 in al, 61h   ; Get the 8255 Port Contence
 [  14]    7C14: 0C 11                                 or al, 00000011h
 [  15]    7C16: E6 61                                 out 61h, al  ;End able speaker and use clock channel 2 for input
-[  16]    7C18: B9 03 00                              mov cx, 03h ; High order wait value
+[  16]    7C18: B9 13 00                              mov cx, 13h ; High order wait value
 [  17]    7C1B: BA 04 0D                              mov dx, 0D04h; Low order wait value
-[  18]    7C1E: B8 86 00                              mov ax, 86h;Wait service
-[  19]    7C21: CD 15                                 int 15h
-[  20]    7C23: 58                                    pop ax;restore Speaker state
-[  21]    7C24: E6 61                                 out 61h, al
-[  22]    7C26: CD 20                                 int 20h
+[  18]    7C1E: B4 86                                 mov ah, 86h;Wait service
+[  19]    7C20: CD 15                                 int 15h
+[  20]    7C22: 58                                    pop ax;restore Speaker state
+[  21]    7C23: E6 61                                 out 61h, al
+[  22]    7C25: CD 20                                 int 20h
 [  23]        :                                       
 [  24]        :                                       
-[  25]    7C28:                                       boot:
-[  26]    7C28: 00 00 00 00 00 00 00 00 00 00 00 00   db 510-(offset boot-offset etiq) dup (00h)
+[  25]    7C27:                                       boot:
+[  26]    7C27: 00 00 00 00 00 00 00 00 00 00 00 00   db 510-(offset boot-offset etiq) dup (00h)
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -72,7 +72,7 @@ Try sound.bin -- emu8086 assembler version: 4.03
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
-                00 00                               
+                00 00 00                            
 [  27]    7DFE: 55 AA                                 dw 0xAA55
 [  28]        :                                       
  
