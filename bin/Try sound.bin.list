@@ -2,7 +2,7 @@ EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
  
 Try sound.bin -- emu8086 assembler version: 4.03  
  
-[ 23/05/2016  --  11:11:10 ] 
+[ 24/05/2016  --  10:18:47 ] 
  
 ===================================================================================================
 [LINE]     LOC: MACHINE CODE                          SOURCE
@@ -11,19 +11,29 @@ Try sound.bin -- emu8086 assembler version: 4.03
 [   1]        :                                       ORG 07c00h
 [   2]        :                                       
 [   3]    7C00:                                       etiq:
-[   4]    7C00: B0 B6                                 MOV al, 0B6h
-[   5]    7C02: E6 43                                 OUT 43h, al
-[   6]    7C04: B8 97 0A                              MOV ax, 2711
-[   7]    7C07: E6 42                                 OUT 42h, al
-[   8]    7C09: 8A C4                                 mov al, ah
-[   9]    7C0B: E6 42                                 OUT 42h, al
-[  10]    7C0D: E4 61                                 IN al, 61h
-[  11]    7C0F: 0C 03                                 OR al, 3
-[  12]    7C11: E6 61                                 OUT 61h, al
-[  13]    7C13: EB EB                                 jmp etiq
-[  14]        :                                       
-[  15]    7C15:                                       boot:
-[  16]    7C15: 00 00 00 00 00 00 00 00 00 00 00 00   db 510-(offset boot-offset etiq) dup (00h)
+[   4]    7C00: E4 61                                 in al, 61h
+[   5]    7C02: 50                                    push ax ;Save state of port 61h
+[   6]    7C03: BB A2 1A                              mov bx, 6818; 1193180/175 175 is the frequency we want to heard
+[   7]    7C06: B0 6B                                 mov al, 6Bh  ; Select Channel 2, write LSB/BSB mode 3
+[   8]    7C08: E6 43                                 out 43h, al
+[   9]    7C0A: 8B C3                                 mov ax, bx
+[  10]    7C0C: E6 24                                 out 24h, al  ; Send the LSB
+[  11]    7C0E: 8A C4                                 mov al, ah
+[  12]    7C10: E6 42                                 out 42h, al  ; Send the MSB
+[  13]    7C12: E4 61                                 in al, 61h   ; Get the 8255 Port Contence
+[  14]    7C14: 0C 11                                 or al, 00000011h
+[  15]    7C16: E6 61                                 out 61h, al  ;End able speaker and use clock channel 2 for input
+[  16]    7C18: B9 03 00                              mov cx, 03h ; High order wait value
+[  17]    7C1B: BA 04 0D                              mov dx, 0D04h; Low order wait value
+[  18]    7C1E: B8 86 00                              mov ax, 86h;Wait service
+[  19]    7C21: CD 15                                 int 15h
+[  20]    7C23: 58                                    pop ax;restore Speaker state
+[  21]    7C24: E6 61                                 out 61h, al
+[  22]    7C26: CD 20                                 int 20h
+[  23]        :                                       
+[  24]        :                                       
+[  25]    7C28:                                       boot:
+[  26]    7C28: 00 00 00 00 00 00 00 00 00 00 00 00   db 510-(offset boot-offset etiq) dup (00h)
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -62,10 +72,9 @@ Try sound.bin -- emu8086 assembler version: 4.03
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
-                00 00 00 00 00 00 00 00 00 00 00 00 
-                00 00 00 00 00 00 00 00 00          
-[  17]    7DFE: 55 AA                                 dw 0xAA55
-[  18]        :                                       
+                00 00                               
+[  27]    7DFE: 55 AA                                 dw 0xAA55
+[  28]        :                                       
  
 ===================================================================================================
  

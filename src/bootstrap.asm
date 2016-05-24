@@ -21,7 +21,6 @@
 ; note: you may not use dos interrupts for boot record code,
 ;       unless you manually replace them in interrupt vector table.
 ;       (refer to global memory map in documentation)
-;dummy code
  
 org 7c00h      ; set location counter.
 
@@ -31,7 +30,7 @@ int 13h
 
 mov ax, 4F00h
 mov es, ax
-mov bx, 0F00h ; Point to the code to load
+mov bx, 0F00h ; Point to the future location of the code we load
 mov dl, 0h ; Floppy Number
 mov dh, 0h ; Head Number
 mov ch, 0h ; Cylinder number
@@ -43,7 +42,7 @@ jnc exit
 jmp boot  ; else retry
 
 exit:
-jmp 4F00h:0F00h
+jmp 4F00h:0F00h ;jump to the code we load
 ret
 
 db 504-(offset exit-offset boot) dup (00h) ; Put 0 in the memory
@@ -59,7 +58,7 @@ int 10h
 jmp code
 
 fin:
-int 20h                                      
+int 20h ;Like RET instructions                                     
 
 
 
