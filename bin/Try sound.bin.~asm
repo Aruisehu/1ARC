@@ -7,7 +7,7 @@ mov bx, 6818; 1193180/175 175 is the frequency we want to heard
 mov al, 6Bh  ; Select Channel 2, write LSB/BSB mode 3
 out 43h, al
 mov ax, bx
-out 24h, al  ; Send the LSB
+out 42h, al  ; Send the LSB
 mov al, ah
 out 42h, al  ; Send the MSB
 in al, 61h   ; Get the 8255 Port Contence

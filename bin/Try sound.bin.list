@@ -2,7 +2,7 @@ EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
  
 Try sound.bin -- emu8086 assembler version: 4.03  
  
-[ 24/05/2016  --  10:18:47 ] 
+[ 24/05/2016  --  10:24:50 ] 
  
 ===================================================================================================
 [LINE]     LOC: MACHINE CODE                          SOURCE
@@ -17,7 +17,7 @@ Try sound.bin -- emu8086 assembler version: 4.03
 [   7]    7C06: B0 6B                                 mov al, 6Bh  ; Select Channel 2, write LSB/BSB mode 3
 [   8]    7C08: E6 43                                 out 43h, al
 [   9]    7C0A: 8B C3                                 mov ax, bx
-[  10]    7C0C: E6 24                                 out 24h, al  ; Send the LSB
+[  10]    7C0C: E6 42                                 out 42h, al  ; Send the LSB
 [  11]    7C0E: 8A C4                                 mov al, ah
 [  12]    7C10: E6 42                                 out 42h, al  ; Send the MSB
 [  13]    7C12: E4 61                                 in al, 61h   ; Get the 8255 Port Contence
