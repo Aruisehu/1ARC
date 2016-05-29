@@ -4,7 +4,7 @@ etiq:
 in al, 61h
 push ax ;Save state of port 61h
 mov bx, 6818; 1193180/175 175 is the frequency we want to heard
-mov al, 6Bh  ; Select Channel 2, write LSB/BSB mode 3
+mov al, 0B6h  ; Select Channel 2, write LSB/BSB mode 3
 out 43h, al
 mov ax, bx
 out 42h, al  ; Send the LSB
@@ -19,7 +19,7 @@ mov ah, 86h;Wait service
 int 15h
 pop ax;restore Speaker state
 out 61h, al
-int 20h
+jmp etiq
 
 
 boot:

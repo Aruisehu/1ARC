@@ -2,7 +2,7 @@ EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
  
 Try sound.bin -- emu8086 assembler version: 4.03  
  
-[ 24/05/2016  --  15:09:42 ] 
+[ 29/05/2016  --  13:35:22 ] 
  
 ===================================================================================================
 [LINE]     LOC: MACHINE CODE                          SOURCE
@@ -14,7 +14,7 @@ Try sound.bin -- emu8086 assembler version: 4.03
 [   4]    7C00: E4 61                                 in al, 61h
 [   5]    7C02: 50                                    push ax ;Save state of port 61h
 [   6]    7C03: BB A2 1A                              mov bx, 6818; 1193180/175 175 is the frequency we want to heard
-[   7]    7C06: B0 6B                                 mov al, 6Bh  ; Select Channel 2, write LSB/BSB mode 3
+[   7]    7C06: B0 B6                                 mov al, 0B6h  ; Select Channel 2, write LSB/BSB mode 3
 [   8]    7C08: E6 43                                 out 43h, al
 [   9]    7C0A: 8B C3                                 mov ax, bx
 [  10]    7C0C: E6 42                                 out 42h, al  ; Send the LSB
@@ -29,7 +29,7 @@ Try sound.bin -- emu8086 assembler version: 4.03
 [  19]    7C20: CD 15                                 int 15h
 [  20]    7C22: 58                                    pop ax;restore Speaker state
 [  21]    7C23: E6 61                                 out 61h, al
-[  22]    7C25: CD 20                                 int 20h
+[  22]    7C25: EB D9                                 jmp etiq
 [  23]        :                                       
 [  24]        :                                       
 [  25]    7C27:                                       boot:
