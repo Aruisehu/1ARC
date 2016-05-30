@@ -4,6 +4,7 @@
 * http://a.michelizza.free.fr/pmwiki.php?n=TutoOS.TutoOS
 * http://www.codeproject.com/Articles/664165/Writing-a-boot-loader-in-Assembly-and-C-Part
 * https://www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf
+* http://www.intel-assembler.it/portale/5/make-sound-from-the-speaker-in-assembly/8255-8255-8284-asm-program-example.asp
 
 Git :
 
