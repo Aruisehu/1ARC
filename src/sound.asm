@@ -1,10 +1,11 @@
 ORG 07c00h
 
 etiq:
+cli                      ; Clear interuption
 
-MOV     DX,2000          ; Number of times to repeat whole routine.
+MOV     DX,5000          ; Number of times to repeat whole routine.
 
-MOV     BX,1             ; Frequency value.
+MOV     BX,1            ; Frequency value.
 
 MOV     AL, 10110110B    ; The Magic Number (use this binary number only)
 OUT     43H, AL          ; Send it to the initializing port 43H Timer 2.
@@ -31,7 +32,7 @@ INC     BX               ; Incrementing the value of BX lowers
                          ; the frequency each time we repeat the
                          ; whole routine
 
-DEC     DX               ; Decrement repeat routine count
+;DEC     DX               ; Decrement repeat routine count
 
 CMP     DX, 0            ; Is DX (repeat count) = to 0
 JNZ     NEXT_FREQUENCY   ; If not jump to NEXT_FREQUENCY
