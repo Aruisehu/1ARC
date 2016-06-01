@@ -7,10 +7,10 @@ int 13h
 mov ax, 07e1h
 mov es, ax
 mov bx, 0000h ; Point to the future location of the code we load
-mov dl, 1h ; Floppy Number
+mov dl, 0h ; Floppy Number
 mov dh, 0h ; Head Number
 mov ch, 0h ; Cylinder number
-mov cl, 1h ; Sector Number
+mov cl, 2h ; Sector Number
 mov al, 2 ; Number of sector to load
 mov ah, 2 ; set the interruption mode
 int 13h   ; Load code pointed in RAM 
