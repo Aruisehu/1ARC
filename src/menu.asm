@@ -1,18 +1,107 @@
-org 07c1h
-;piano plays with azertyui
-call print_piano
-press_key:
-mov ah, 0
-int 16h ; wait for a pressed key
-mov bx, offset pressed_key
-cmp ah, 1 ; escape pressed, we quit the program
-je endf
-sub ah, 10h
-mov [bx], ah
-call print_piano
-jmp press_key
-endf:
-ret
+org 07e1h
+
+
+call main
+
+;Main Menu
+;Use F1, F2, F3 to select the mode
+;Escape to quit program
+
+main PROC
+    ; print the menu
+    mov al, 1 
+	mov bh, 0 
+	mov bl, 0000_1011b ; choose the color
+	mov cx, msg1end - offset msg1 ; calculate message size. 
+	mov dl, 30; select the column where to print the message
+	mov dh, 0 ; select the row
+	push cs ; use to access to variable
+	pop es
+	mov bp, offset msg1; select the string to be print
+	mov ah, 13h ; print the string pointed by es:bp
+	int 10h  
+	; don't need to change ah value, so we are doing exactly the same thing
+	mov cx, menu1end - offset menu1 ; calculate message size. 
+	mov dl, 3
+	mov dh, 3
+	mov bp, offset menu1
+	int 10h 
+	
+	mov cx, menu2end - offset menu2 ; calculate message size. 
+	mov dh, 5
+	mov bp, offset menu2
+	int 10h 
+	
+	mov cx, menu3end - offset menu3; calculate message size. 
+	mov dh, 7
+	mov bp, offset menu3
+	int 10h
+	
+	mov cx, menu4end - offset menu4; calculate message size. 
+	mov dh, 11
+	mov bp, offset menu4
+	int 10h 
+	
+	mov ah, 0
+	int 16h
+	cmp ah, 1
+	je fin
+	cmp ah, 10h
+	je ftp
+	cmp ah, 3Ch
+	je pap
+	cmp ah, 3Dh
+	je wmp
+	msg1 db " PIaNOS "
+    msg1end: 
+    menu1 db "F1   Free-To-play"
+    menu1end:
+    menu2 db "F2   Play a piece"
+    menu2end:
+    menu3 db "F3   Watch me play"
+    menu3end:
+    menu4 db "ESC  Exit" 
+    menu4end:
+main ENDP
+
+fin:
+int 20h
+
+ftp:
+call free_to_play ; doesn't exist for now
+jmp fin
+
+pap:
+;call play_a_piece ; doesn't exist for now
+jmp fin
+
+wmp:
+;call watch_me_play ; doesn't exist for now
+jmp fin
+
+
+
+free_to_play PROC 
+    jmp start 
+    start:
+    ;piano plays with azertyui
+    mov bx, offset pressed_key
+    mov [bx], 12h
+    call print_piano
+    press_key:
+    mov ah, 0
+    int 16h ; wait for a pressed key
+    mov bx, offset pressed_key
+    cmp ah, 1 ; escape pressed, we quit the program
+    je endf
+    sub ah, 10h
+    mov [bx], ah
+    call print_piano
+    jmp press_key
+    endf:
+    ret
+free_to_play ENDP
+
 print_piano PROC
     mov bx, offset column
     mov [bx], 0
@@ -38,9 +127,9 @@ print_piano PROC
     call print_key
     pop cx ; restore this value
     mov bx, offset key_off
-    add [bx], 7 ; use to change key
+    add [bx], 6 ; use to change key
     inc cx
-    cmp cx, 8
+    cmp cx, 12
     jnz key ;loop
     ret
 print_piano ENDP
@@ -98,7 +187,7 @@ print_key_end PROC
     mov bx, offset color
     mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
     mov bh, 0 ; print on  page 1 
-    mov cx, 7 ; number of character to print
+    mov cx, 6 ; number of character to print
     mov ah, 9 ; prepare interruption
     int 10h ; printing 
     ret
@@ -123,11 +212,11 @@ print_key_row PROC
     mov bx, offset color
     mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
     mov bh, 0 ; print on  page 1
-    mov cx, 5
+    mov cx, 4
     mov ah, 9
     int 10h
     mov bx, offset column
-    add [bx], 5
+    add [bx], 4
     mov dl, [bx]
     mov bh, 0
     mov ah, 2
