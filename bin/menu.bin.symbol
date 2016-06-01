@@ -1,0 +1,39 @@
+< THE SYMBOL TABLE >  menu.bin  --  emu8086 assembler version: 4.03 
+===================================================================================================
+Name                     	Offset    	Size      	Type      	Segment   
+===================================================================================================
+MAIN                     	007E4     	-1        	NEAR      	(NOSEG)   
+MSG1                     	0083C     	1         	VAR       	(NOSEG)   
+MSG1END                  	00844     	-1        	LABEL     	(NOSEG)   
+MENU1                    	00844     	1         	VAR       	(NOSEG)   
+MENU1END                 	00855     	-1        	LABEL     	(NOSEG)   
+MENU2                    	00855     	1         	VAR       	(NOSEG)   
+MENU2END                 	00866     	-1        	LABEL     	(NOSEG)   
+MENU3                    	00866     	1         	VAR       	(NOSEG)   
+MENU3END                 	00878     	-1        	LABEL     	(NOSEG)   
+MENU4                    	00878     	1         	VAR       	(NOSEG)   
+MENU4END                 	00881     	-1        	LABEL     	(NOSEG)   
+FIN                      	00881     	-1        	LABEL     	(NOSEG)   
+FTP                      	00883     	-1        	LABEL     	(NOSEG)   
+PAP                      	00888     	-1        	LABEL     	(NOSEG)   
+WMP                      	0088A     	-1        	LABEL     	(NOSEG)   
+FREE_TO_PLAY             	0088C     	-1        	NEAR      	(NOSEG)   
+START                    	0088E     	-1        	LABEL     	(NOSEG)   
+PRESS_KEY                	00897     	-1        	LABEL     	(NOSEG)   
+ENDF                     	008AD     	-1        	LABEL     	(NOSEG)   
+PRINT_PIANO              	008AE     	-1        	NEAR      	(NOSEG)   
+KEY                      	008C6     	-1        	LABEL     	(NOSEG)   
+CONTINUE                 	008DF     	-1        	LABEL     	(NOSEG)   
+PRINT_KEY                	008F1     	-1        	NEAR      	(NOSEG)   
+ETIQ                     	00911     	-1        	LABEL     	(NOSEG)   
+PRINT_KEY_END            	00939     	-1        	NEAR      	(NOSEG)   
+PRINT_KEY_ROW            	00963     	-1        	NEAR      	(NOSEG)   
+COLOR                    	009AF     	1         	VAR       	(NOSEG)   
+COLUMN                   	009B0     	1         	VAR       	(NOSEG)   
+ROW                      	009B1     	1         	VAR       	(NOSEG)   
+KEY_OFF                  	009B2     	1         	VAR       	(NOSEG)   
+PRESSED_KEY              	009B3     	1         	VAR       	(NOSEG)   
+===================================================================================================
+[ 01/06/2016  --  22:59:52 ] 
+< END >
+ 

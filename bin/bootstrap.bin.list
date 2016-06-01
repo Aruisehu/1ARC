@@ -2,61 +2,36 @@ EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
  
 bootstrap.bin -- emu8086 assembler version: 4.03  
  
-[ 23/05/2016  --  13:48:50 ] 
+[ 01/06/2016  --  23:02:42 ] 
  
 ===================================================================================================
 [LINE]     LOC: MACHINE CODE                          SOURCE
 ===================================================================================================
  
-[   1]        :                                       ; BIOS reads 512 bytes from cylinder: 0, head: 0, sector: 1
-[   2]        :                                       ; of bootable floppy drive, then it loads this data into
-[   3]        :                                       ; memory at 0000:7c00h and starts the execution from the first byte.
-[   4]        :                                       
-[   5]        :                                       ; note: this file is assembled into .bin file.
-[   6]        :                                       ;       default configuration for .binf file:
-[   7]        :                                       ;       load segment: 0000, load offset: 7c00,
-[   8]        :                                       ;       same values are set to CS and IP registers accordingly.
-[   9]        :                                       
-[  10]        :                                       ; .binf file is used by the emulator to decide at what memory
-[  11]        :                                       ; address to load binary file and start the execution, when
-[  12]        :                                       ; loading address is set to 0000:7c00 it emulates the way BIOS
-[  13]        :                                       ; loads the boot record into the memory.
-[  14]        :                                       
-[  15]        :                                       ; the output of this format is identical to format created from
-[  16]        :                                       ; bin template, both templates create plain binary files.
-[  17]        :                                       ; .boot output type is outdated because of its redundancy.
-[  18]        :                                       ; you can write .bin file to boot record of a real
-[  19]        :                                       ; floppy drive using writebin.asm (it's required to assemble this file first)
-[  20]        :                                       
-[  21]        :                                       ; note: you may not use dos interrupts for boot record code,
-[  22]        :                                       ;       unless you manually replace them in interrupt vector table.
-[  23]        :                                       ;       (refer to global memory map in documentation)
-[  24]        :                                       ;dummy code
-[  25]        :                                       
-[  26]        :                                       org 7c00h      ; set location counter.
-[  27]        :                                       
-[  28]    7C00:                                       boot:
-[  29]    7C00: B8 00 00                              mov ax, 0 ; Reset floppy system
-[  30]    7C03: CD 13                                 int 13h
-[  31]        :                                       
-[  32]    7C05: B8 00 4F                              mov ax, 4F00h
-[  33]    7C08: 8E C0                                 mov es, ax
-[  34]    7C0A: BB 00 0F                              mov bx, 0F00h ; Point to the code to load
-[  35]    7C0D: B2 00                                 mov dl, 0h ; Floppy Number
-[  36]    7C0F: B6 00                                 mov dh, 0h ; Head Number
-[  37]    7C11: B5 00                                 mov ch, 0h ; Cylinder number
-[  38]    7C13: B1 02                                 mov cl, 2h ; Sector Number
-[  39]    7C15: B0 02                                 mov al, 2 ; Number of sector to load
-[  40]    7C17: B4 02                                 mov ah, 2 ; set the interruption mode
-[  41]    7C19: CD 13                                 int 13h   ; Load code pointed in RAM
-[  42]    7C1B: 73 02                                 jnc exit
-[  43]    7C1D: EB E1                                 jmp boot  ; else retry
-[  44]        :                                       
-[  45]    7C1F:                                       exit:
-[  46]    7C1F: EA 00 0F 00 4F                        jmp 4F00h:0F00h
-[  47]    7C24: C3                                    ret
-[  48]        :                                       
-[  49]    7C25: 00 00 00 00 00 00 00 00 00 00 00 00   db 504-(offset exit-offset boot) dup (00h) ; Put 0 in the memory
+[   1]        :                                       org 7c00h      ; set location counter.
+[   2]        :                                       
+[   3]    7C00:                                       boot:
+[   4]    7C00: B8 00 00                              mov ax, 0 ; Reset floppy system
+[   5]    7C03: CD 13                                 int 13h
+[   6]        :                                       
+[   7]    7C05: B8 E1 07                              mov ax, 07e1h
+[   8]    7C08: 8E C0                                 mov es, ax
+[   9]    7C0A: BB 00 00                              mov bx, 0000h ; Point to the future location of the code we load
+[  10]    7C0D: B2 01                                 mov dl, 1h ; Floppy Number
+[  11]    7C0F: B6 00                                 mov dh, 0h ; Head Number
+[  12]    7C11: B5 00                                 mov ch, 0h ; Cylinder number
+[  13]    7C13: B1 01                                 mov cl, 1h ; Sector Number
+[  14]    7C15: B0 02                                 mov al, 2 ; Number of sector to load
+[  15]    7C17: B4 02                                 mov ah, 2 ; set the interruption mode
+[  16]    7C19: CD 13                                 int 13h   ; Load code pointed in RAM
+[  17]    7C1B: 73 02                                 jnc exit
+[  18]    7C1D: EB E1                                 jmp boot  ; else retry
+[  19]        :                                       
+[  20]    7C1F:                                       exit:
+[  21]    7C1F: EA 00 00 E1 07                        jmp 07e1:0000h ;jump to the code we load
+[  22]    7C24: C3                                    ret
+[  23]        :                                       
+[  24]    7C25: 00 00 00 00 00 00 00 00 00 00 00 00   db 504-(offset exit-offset boot) dup (00h) ; Put 0 in the memory
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -96,24 +71,11 @@ bootstrap.bin -- emu8086 assembler version: 4.03
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00 00 00 00 00 00 00 00 
                 00 00 00 00 00                      
-[  50]    7DFE: 55 AA                                 dw 0xAA55 ; Way to stop bootstrap
-[  51]        :                                       
-[  52]    7E00:                                       code:
-[  53]    7E00: B4 00                                 mov ah, 0
-[  54]    7E02: CD 16                                 int 16h
-[  55]    7E04: 80 FC 01                              cmp ah, 1
-[  56]    7E07: 74 06                                 je fin
-[  57]    7E09: B4 0E                                 mov ah, 0Eh
-[  58]    7E0B: CD 10                                 int 10h
-[  59]    7E0D: EB F1                                 jmp code
-[  60]        :                                       
-[  61]    7E0F:                                       fin:
-[  62]    7E0F: CD 20                                 int 20h
-[  63]        :                                       
-[  64]        :                                       
-[  65]        :                                       
-[  66]        :                                       
-[  67]        :                                       
+[  25]    7DFE: 55 AA                                 dw 0xAA55 ; Way to stop bootstrap
+[  26]        :                                       
+[  27]        :                                       
+[  28]        :                                       
+[  29]        :                                       
  
 ===================================================================================================
  
