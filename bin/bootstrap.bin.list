@@ -2,7 +2,7 @@ EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
  
 bootstrap.bin -- emu8086 assembler version: 4.03  
  
-[ 01/06/2016  --  23:02:42 ] 
+[ 04/06/2016  --  00:10:26 ] 
  
 ===================================================================================================
 [LINE]     LOC: MACHINE CODE                          SOURCE
@@ -14,13 +14,13 @@ bootstrap.bin -- emu8086 assembler version: 4.03
 [   4]    7C00: B8 00 00                              mov ax, 0 ; Reset floppy system
 [   5]    7C03: CD 13                                 int 13h
 [   6]        :                                       
-[   7]    7C05: B8 E1 07                              mov ax, 07e1h
+[   7]    7C05: B8 00 00                              mov ax, 0000h
 [   8]    7C08: 8E C0                                 mov es, ax
-[   9]    7C0A: BB 00 00                              mov bx, 0000h ; Point to the future location of the code we load
-[  10]    7C0D: B2 01                                 mov dl, 1h ; Floppy Number
+[   9]    7C0A: BB 10 7E                              mov bx, 7e10h ; Point to the future location of the code we load
+[  10]    7C0D: B2 00                                 mov dl, 0h ; Floppy Number
 [  11]    7C0F: B6 00                                 mov dh, 0h ; Head Number
 [  12]    7C11: B5 00                                 mov ch, 0h ; Cylinder number
-[  13]    7C13: B1 01                                 mov cl, 1h ; Sector Number
+[  13]    7C13: B1 02                                 mov cl, 2h ; Sector Number
 [  14]    7C15: B0 02                                 mov al, 2 ; Number of sector to load
 [  15]    7C17: B4 02                                 mov ah, 2 ; set the interruption mode
 [  16]    7C19: CD 13                                 int 13h   ; Load code pointed in RAM
@@ -28,7 +28,7 @@ bootstrap.bin -- emu8086 assembler version: 4.03
 [  18]    7C1D: EB E1                                 jmp boot  ; else retry
 [  19]        :                                       
 [  20]    7C1F:                                       exit:
-[  21]    7C1F: EA 00 00 E1 07                        jmp 07e1:0000h ;jump to the code we load
+[  21]    7C1F: EA 10 7E 00 00                        jmp 0000:7e10h ;jump to the code we load
 [  22]    7C24: C3                                    ret
 [  23]        :                                       
 [  24]    7C25: 00 00 00 00 00 00 00 00 00 00 00 00   db 504-(offset exit-offset boot) dup (00h) ; Put 0 in the memory

@@ -1,5 +1,4 @@
-org 07e1h
-
+org 7e10h
 
 call main
 
@@ -15,8 +14,6 @@ mov bl, 0000_1011b ; choose the color
 mov cx, msg1end - offset msg1 ; calculate message size.
 mov dl, 30; select the column where to print the message
 mov dh, 0 ; select the row
-push cs ; use to access to variable
-pop es
 mov bp, offset msg1; select the string to be print
 mov ah, 13h ; print the string pointed by es:bp
 int 10h
@@ -64,27 +61,26 @@ menu4 db "ESC  Exit"
 menu4end:
 main ENDP
 
+
 fin:
 int 20h
 
 ftp:
-call free_to_play ; doesn't exist for now
-jmp fin
+call free_to_play
+call main
 
 pap:
-;call play_a_piece ; doesn't exist for now
-jmp fin
+call play_a_piece ; doesn't exist for now
+call main
 
 wmp:
 ;call watch_me_play ; doesn't exist for now
-jmp fin
+call main
 
 
 
 free_to_play PROC
-jmp start
-start:
-;piano plays with azertyui
+;piano plays with azertyuiop^$
 mov bx, offset pressed_key
 mov [bx], 12h
 call print_piano
@@ -93,14 +89,72 @@ mov ah, 0
 int 16h ; wait for a pressed key
 mov bx, offset pressed_key
 cmp ah, 1 ; escape pressed, we quit the program
-je endf
+je end_free
 sub ah, 10h
 mov [bx], ah
 call print_piano
 jmp press_key
-endf:
+end_free:
 ret
 free_to_play ENDP
+
+play_a_piece PROC
+;piano plays with azertyuiop^$
+mov bx, offset pressed_key
+mov [bx], 12h
+call print_piano
+mov bx, offset piece1[0]
+beginp:
+mov cl, 11
+press_key1:
+cmp [bx], 13
+je end_play
+cmp [bx], cl
+jne next
+mov al, cl
+mov dl, 6
+mul dl
+push bx
+push cx
+call print_next
+pop cx
+pop bx
+next:
+cmp cl, 0
+je piano
+dec cl
+jmp press_key1
+piano:
+mov ah, 0
+int 16h ; wait for a pressed key
+push bx
+mov bx, offset pressed_key
+cmp ah, 1 ; escape pressed, we quit the program
+je end_play
+sub ah, 10h
+mov [bx], ah
+call print_piano
+pop bx
+inc bx
+jmp beginp
+end_play:
+ret
+play_a_piece ENDP
+
+print_next PROC
+mov dl, al ;set the cursor position on the column
+mov dh, 14
+mov bh, 0 ; change page's 1 cursor
+mov ah, 2 ; prepare interruption
+int 10h ; change cursor position
+mov al, '-' ; character to print
+mov bl, 00001001b; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+mov bh, 0 ; print on  page 1
+mov cx, 6 ; number of character to print
+mov ah, 9 ; prepare interruption
+int 10h ; printing
+ret
+print_next ENDP
 
 print_piano PROC
 mov bx, offset column
@@ -131,6 +185,18 @@ add [bx], 6 ; use to change key
 inc cx
 cmp cx, 12
 jnz key ;loop
+
+mov dl, 0
+mov dh, 14
+mov bh, 0
+mov ah, 2
+int 10h  ; move cursor to the right position
+mov al, ' ' ; character to print
+mov bl, 0
+mov bh, 0 ; print on  page 1
+mov cx, 50h ; number of character to print
+mov ah, 9 ; prepare interruption
+int 10h ; printing
 ret
 print_piano ENDP
 
@@ -236,6 +302,8 @@ column db 0 ; must change value in code to display other touch
 row db 0
 key_off db 0
 pressed_key db 12h
+next_key db 12h
+piece1 db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
 
 
 

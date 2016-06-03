@@ -4,9 +4,9 @@ boot:
 mov ax, 0 ; Reset floppy system
 int 13h
 
-mov ax, 07e1h
+mov ax, 0000h
 mov es, ax
-mov bx, 0000h ; Point to the future location of the code we load
+mov bx, 7e10h ; Point to the future location of the code we load
 mov dl, 0h ; Floppy Number
 mov dh, 0h ; Head Number
 mov ch, 0h ; Cylinder number
@@ -18,7 +18,7 @@ jnc exit
 jmp boot  ; else retry
 
 exit:
-jmp 07e1:0000h ;jump to the code we load
+jmp 0000:7e10h ;jump to the code we load
 ret
 
 db 504-(offset exit-offset boot) dup (00h) ; Put 0 in the memory
