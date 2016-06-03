@@ -135,6 +135,7 @@ play_a_piece PROC
     sub ah, 10h
     mov [bx], ah
     call print_piano
+    call play_sound_freq
     pop bx
     inc bx
     jmp beginp
@@ -376,7 +377,7 @@ play_sound_freq PROC
 	   jmp ply_snd
 			 
 	ply_snd:       
-	    MOV     DX,5000         ; Number of times to repeat whole routine.
+	    MOV     DX,10000         ; Number of times to repeat whole routine.
 
     	MOV     BX, offset frequency           ; Frequency value.
     
