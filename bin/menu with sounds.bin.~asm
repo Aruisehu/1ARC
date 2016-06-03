@@ -93,6 +93,7 @@ je end_free
 sub ah, 10h
 mov [bx], ah
 call print_piano
+call play_sound_freq
 jmp press_key
 end_free:
 ret
@@ -297,15 +298,133 @@ int 10h
 ret
 print_key_row ENDP
 
+play_sound_freq PROC
+mov bx, offset pressed_key
+cmp [bx], 0
+je freq_key_0
+cmp [bx], 1
+je freq_key_1
+cmp [bx], 2
+je freq_key_2
+cmp [bx], 3
+je freq_key_3
+cmp [bx], 4
+je freq_key_4
+cmp [bx], 5
+je freq_key_5
+cmp [bx], 6
+je freq_key_6
+cmp [bx], 7
+je freq_key_7
+cmp [bx], 8
+je freq_key_8
+cmp [bx], 9
+je freq_key_9
+cmp [bx], 10
+je freq_key_10
+cmp [bx], 11
+je freq_key_11
+jmp ply_snd
+
+freq_key_0:
+mov bx, offset frequency
+mov [bx], 4560; do (C4)
+jmp ply_snd
+freq_key_1:
+mov bx, offset frequency
+mov [bx], 4305; do# (C4#)
+jmp ply_snd
+freq_key_2:
+mov bx, offset frequency
+mov [bx], 4063; re (D4)
+jmp ply_snd
+freq_key_3:
+mov bx, offset frequency
+mov [bx], 3835; re# (D4#)
+jmp ply_snd
+freq_key_4:
+mov bx, offset frequency
+mov [bx], 3620; mi (E4)
+jmp ply_snd
+freq_key_5:
+mov bx, offset frequency
+mov [bx], 3417; fa (F4)
+jmp ply_snd
+freq_key_6:
+mov bx, offset frequency
+mov [bx], 3225; fa# (F4#)
+jmp ply_snd
+freq_key_7:
+mov bx, offset frequency
+mov [bx], 3044; sol (G4)
+jmp ply_snd
+freq_key_8:
+mov bx, offset frequency
+mov [bx], 2873; sol# (G4#)
+jmp ply_snd
+freq_key_9:
+mov bx, offset frequency
+mov [bx], 2712; la (A4)
+jmp ply_snd
+freq_key_10:
+mov bx, offset frequency
+mov [bx], 2560; la# (A4#)
+jmp ply_snd
+freq_key_11:
+mov bx, offset frequency
+mov [bx], 2416; si (B4)
+jmp ply_snd
+
+ply_snd:
+MOV     DX,5000         ; Number of times to repeat whole routine.
+
+MOV     BX, offset frequency           ; Frequency value.
+
+MOV     AL, 10110110B    ; The Magic Number (use this binary number only)
+OUT     43H, AL          ; Send it to the initializing port 43H Timer 2.
+
+NEXT_FREQUENCY:          ; This is were we will jump back to 2000 times.
+
+MOV     AX, [BX]           ; Move our Frequency value into AX.
+
+OUT     42H, AL          ; Send LSB to port 42H.
+MOV     AL, AH           ; Move MSB into AL
+OUT     42H, AL          ; Send MSB to port 42H.
+
+IN      AL, 61H          ; Get current value of port 61H.
+OR      AL, 00000011B    ; OR AL to this value, forcing first two bits high.
+OUT     61H, AL          ; Copy it to port 61H of the PPI Chip
+; to turn ON the speaker.
+
+MOV     CX, 100          ; Repeat loop 100 times
+DELAY_LOOP:              ; Here is where we loop back too.
+LOOP    DELAY_LOOP       ; Jump repeatedly to DELAY_LOOP until CX = 0
+
+DEC     DX               ; Decrement repeat routine count
+
+CMP     DX, 0            ; Is DX (repeat count) = to 0
+JNZ     NEXT_FREQUENCY   ; If not jump to NEXT_FREQUENCY
+; and do whole routine again.
+
+; Else DX = 0 time to turn speaker OFF
+
+IN      AL,61H           ; Get current value of port 61H.
+AND     AL,11111100B     ; AND AL to this value, forcing first two bits low.
+OUT     61H,AL           ; Copy it to port 61H of the PPI Chip
+ret
+play_sound_freq ENDP
+
+
 color db 00001111b
 column db 0 ; must change value in code to display other touch
 row db 0
 key_off db 0
 pressed_key db 12h
+frequency dw 12h
 next_key db 12h
 piece1 db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
 
 
 
 
-; [SOURCE]: C:\Users\Aruisehu\Documents\Supinfo\Projets\1ARC\src\menu.asm
+; [SOURCE]: C:\Users\Aruisehu\Documents\Supinfo\Projets\1ARC\src\menu with sounds.asm
