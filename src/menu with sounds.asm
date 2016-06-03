@@ -376,48 +376,43 @@ play_sound_freq PROC
 	   jmp ply_snd
 			 
 	ply_snd:       
-	   call play_sound 
+	    MOV     DX,5000         ; Number of times to repeat whole routine.
+
+    	MOV     BX, offset frequency           ; Frequency value.
+    
+    	MOV     AL, 10110110B    ; The Magic Number (use this binary number only)
+    	OUT     43H, AL          ; Send it to the initializing port 43H Timer 2.
+    
+    	NEXT_FREQUENCY:          ; This is were we will jump back to 2000 times.
+    
+    	MOV     AX, [BX]           ; Move our Frequency value into AX.
+    
+    	OUT     42H, AL          ; Send LSB to port 42H.
+    	MOV     AL, AH           ; Move MSB into AL  
+    	OUT     42H, AL          ; Send MSB to port 42H.
+    
+    	IN      AL, 61H          ; Get current value of port 61H.
+    	OR      AL, 00000011B    ; OR AL to this value, forcing first two bits high.
+    	OUT     61H, AL          ; Copy it to port 61H of the PPI Chip
+    							 ; to turn ON the speaker.
+    
+    	MOV     CX, 100          ; Repeat loop 100 times
+    	DELAY_LOOP:              ; Here is where we loop back too.
+    	LOOP    DELAY_LOOP       ; Jump repeatedly to DELAY_LOOP until CX = 0
+    
+    	DEC     DX               ; Decrement repeat routine count
+    
+    	CMP     DX, 0            ; Is DX (repeat count) = to 0
+    	JNZ     NEXT_FREQUENCY   ; If not jump to NEXT_FREQUENCY
+    							 ; and do whole routine again.
+    
+    							 ; Else DX = 0 time to turn speaker OFF
+    
+    	IN      AL,61H           ; Get current value of port 61H.
+    	AND     AL,11111100B     ; AND AL to this value, forcing first two bits low.
+    	OUT     61H,AL           ; Copy it to port 61H of the PPI Chip 
 	ret
 play_sound_freq ENDP
-
-play_sound PROC
-	MOV     DX,5000         ; Number of times to repeat whole routine.
-
-	MOV     BX, offset frequency           ; Frequency value.
-
-	MOV     AL, 10110110B    ; The Magic Number (use this binary number only)
-	OUT     43H, AL          ; Send it to the initializing port 43H Timer 2.
-
-	NEXT_FREQUENCY:          ; This is were we will jump back to 2000 times.
-
-	MOV     AX, [BX]           ; Move our Frequency value into AX.
-
-	OUT     42H, AL          ; Send LSB to port 42H.
-	MOV     AL, AH           ; Move MSB into AL  
-	OUT     42H, AL          ; Send MSB to port 42H.
-
-	IN      AL, 61H          ; Get current value of port 61H.
-	OR      AL, 00000011B    ; OR AL to this value, forcing first two bits high.
-	OUT     61H, AL          ; Copy it to port 61H of the PPI Chip
-							 ; to turn ON the speaker.
-
-	MOV     CX, 100          ; Repeat loop 100 times
-	DELAY_LOOP:              ; Here is where we loop back too.
-	LOOP    DELAY_LOOP       ; Jump repeatedly to DELAY_LOOP until CX = 0
-
-	DEC     DX               ; Decrement repeat routine count
-
-	CMP     DX, 0            ; Is DX (repeat count) = to 0
-	JNZ     NEXT_FREQUENCY   ; If not jump to NEXT_FREQUENCY
-							 ; and do whole routine again.
-
-							 ; Else DX = 0 time to turn speaker OFF
-
-	IN      AL,61H           ; Get current value of port 61H.
-	AND     AL,11111100B     ; AND AL to this value, forcing first two bits low.
-	OUT     61H,AL           ; Copy it to port 61H of the PPI Chip
-    ret          ; to turn OFF the speaker.
-play_sound ENDP
 
 
 color db 00001111b
@@ -425,6 +420,6 @@ column db 0 ; must change value in code to display other touch
 row db 0 
 key_off db 0
 pressed_key db 12h
-frequency db 12h
+frequency dw 12h
 next_key db 12h
 piece1 db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
