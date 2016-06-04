@@ -1,12 +1,11 @@
 org 7e10h
 
-call main
+
 
 ;Main Menu
 ;Use F1, F2, F3 to select the mode
 ;Escape to quit program
-
-main PROC
+main:
 ; print the menu
 mov al, 1
 mov bh, 0
@@ -39,16 +38,23 @@ mov dh, 11
 mov bp, offset menu4
 int 10h
 
+mov cx, menu5end - offset menu5; calculate message size.
+mov dh, 14
+mov dl, 0
+mov bp, offset menu5
+int 10h
+
 mov ah, 0
 int 16h
 cmp ah, 1
 je fin
-cmp ah, 10h
+cmp ah, 3Bh
 je ftp
 cmp ah, 3Ch
 je pap
 cmp ah, 3Dh
 je wmp
+jne main
 msg1 db " PIaNOS "
 msg1end:
 menu1 db "F1   Free-To-play"
@@ -59,52 +65,79 @@ menu3 db "F3   Watch me play"
 menu3end:
 menu4 db "ESC  Exit"
 menu4end:
-main ENDP
-
+menu5 db "Please read the user manual before playing"
+menu5end:
+pap1 db "Choose a piece: "
+pap1end:
+pap2 db "F1   By night, in the moonlight"
+pap2end:
+pap3 db "More releases in the future!"
+pap3end:
+pap4 db "ESC Main Menu"
+pap4end:
 
 fin:
 int 20h
 
 ftp:
-call free_to_play
-call main
-
-pap:
-call play_a_piece ; doesn't exist for now
-call main
-
-wmp:
-;call watch_me_play ; doesn't exist for now
-call main
-
-
-
-free_to_play PROC
-;piano plays with azertyuiop^$
-mov bx, offset pressed_key
-mov [bx], 12h
-call print_piano
 press_key:
+call print_piano
 mov ah, 0
 int 16h ; wait for a pressed key
 mov bx, offset pressed_key
 cmp ah, 1 ; escape pressed, we quit the program
 je end_free
 sub ah, 10h
+cmp ah, 12
+jge press_key ;user doesn't press the right key
 mov [bx], ah
 call print_piano
 call play_sound_freq
 jmp press_key
 end_free:
-ret
-free_to_play ENDP
+jmp main
 
-play_a_piece PROC
-;piano plays with azertyuiop^$
-mov bx, offset pressed_key
-mov [bx], 12h
-call print_piano
+pap:
+menupap:
+mov al, 1
+mov bh, 0
+mov bl, 0000_1111b ; choose the color
+mov cx, pap1end - offset pap1 ; calculate message size.
+mov dl, 25; select the column where to print the message
+mov dh, 0 ; select the row
+mov bp, offset pap1; select the string to be print
+mov ah, 13h ; print the string pointed by es:bp
+int 10h
+mov cx, pap2end - offset pap2 ; calculate message size.
+mov dl, 3
+mov dh, 3
+mov bp, offset pap2
+int 10h
+mov cx, pap3end - offset pap3 ; calculate message size.
+mov dh, 5
+mov bp, offset pap3
+int 10h
+mov cx, pap4end - offset pap4 ; calculate message size.
+mov dh, 7
+mov bp, offset pap4
+int 10h
+mov ah, 0
+int 16h ;menu "Pick a song"
+cmp ah, 3Bh
+jne other1
 mov bx, offset piece1[0]
+push bx
+je play
+other1:
+cmp ah, 1h
+jne other2
+ret
+other2:
+jmp menupap ; if invalid key, wait for a valid one
+;piano plays with azertyuiop^$
+play:
+pop bx
+call print_piano
 beginp:
 mov cl, 11
 press_key1:
@@ -135,12 +168,17 @@ je end_play
 sub ah, 10h
 mov [bx], ah
 call print_piano
+call play_sound_freq
 pop bx
 inc bx
 jmp beginp
 end_play:
-ret
-play_a_piece ENDP
+jmp main
+
+wmp:
+;call watch_me_play ; doesn't exist for now
+jmp main
+
 
 print_next PROC
 mov dl, al ;set the cursor position on the column
@@ -179,29 +217,6 @@ mov bx, offset color
 mov [bx], 00001100b
 continue:
 push cx ; save the value of the counter
-call print_key
-pop cx ; restore this value
-mov bx, offset key_off
-add [bx], 6 ; use to change key
-inc cx
-cmp cx, 12
-jnz key ;loop
-
-mov dl, 0
-mov dh, 14
-mov bh, 0
-mov ah, 2
-int 10h  ; move cursor to the right position
-mov al, ' ' ; character to print
-mov bl, 0
-mov bh, 0 ; print on  page 1
-mov cx, 50h ; number of character to print
-mov ah, 9 ; prepare interruption
-int 10h ; printing
-ret
-print_piano ENDP
-
-print_key PROC
 mov bx, offset key_off
 mov dh, [bx]
 mov bx, offset column
@@ -213,55 +228,6 @@ mov dh, [bx] ; load cursor's row
 mov bh, 0
 mov ah, 2
 int 10h ; move the cursor to print this key
-call print_key_row ; call function
-mov cx, 12 ;use to loop
-etiq:
-mov bx, offset key_off
-mov dh, [bx]
-mov bx, offset column
-mov [bx], dh
-mov dl, [bx]
-mov bx, offset row ;restore the value
-inc [bx]
-mov dh, [bx]
-mov bh, 0
-mov ah, 2
-int 10h ;move cursor
-push cx ; store cx (modified in function)
-call print_key_row
-pop cx ;restore cx value
-dec cx
-cmp cx, 0
-jnz etiq ; loop while cx>0
-call print_key_end ; print end of the touch
-ret
-print_key ENDP
-
-print_key_end PROC
-;function printing the end of a keyboard
-mov bx, offset key_off
-mov dh, [bx]
-mov bx, offset column
-mov [bx], dh
-mov dl, [bx]
-mov bx, offset row
-inc [bx]
-mov dh, [bx]
-mov bh, 0
-mov ah, 2
-int 10h  ; move cursor to the right position
-mov al, '-' ; character to print
-mov bx, offset color
-mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
-mov bh, 0 ; print on  page 1
-mov cx, 6 ; number of character to print
-mov ah, 9 ; prepare interruption
-int 10h ; printing
-ret
-print_key_end ENDP
-
-print_key_row PROC
-;function for printing a part of a keyboard
 mov al, '|' ; character to print
 mov bx, offset color
 mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
@@ -295,8 +261,120 @@ mov bh, 0 ; print on  page 1
 mov cx, 1
 mov ah, 9
 int 10h
+mov cx, 12 ;use to loop
+etiq:
+mov bx, offset key_off
+mov dh, [bx]
+mov bx, offset column
+mov [bx], dh
+mov dl, [bx]
+mov bx, offset row ;restore the value
+inc [bx]
+mov dh, [bx]
+mov bh, 0
+mov ah, 2
+int 10h ;move cursor
+push cx ; store cx (modified in function)
+mov al, '|' ; character to print
+mov bx, offset color
+mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+mov bh, 0 ; print on  page 1
+mov cx, 1 ; number of character to print
+mov ah, 9 ; prepare interruption
+int 10h ; printing
+mov bx, offset column ; pick up the address of the column
+inc [bx] ; add 1 to the column
+mov dl, [bx] ;set the cursor position on the column
+mov bh, 0 ; change page's 1 cursor
+mov ah, 2 ; prepare interruption
+int 10h ; change cursor position
+mov al, ' '
+mov bx, offset color
+mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+mov bh, 0 ; print on  page 1
+mov cx, 4
+mov ah, 9
+int 10h
+mov bx, offset column
+add [bx], 4
+mov dl, [bx]
+mov bh, 0
+mov ah, 2
+int 10h
+mov al, '|'
+mov bx, offset color
+mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+mov bh, 0 ; print on  page 1
+mov cx, 1
+mov ah, 9
+int 10h
+pop cx ;restore cx value
+dec cx
+cmp cx, 0
+jnz etiq ; loop while cx>0
+mov bx, offset key_off
+mov dh, [bx]
+mov bx, offset column
+mov [bx], dh
+mov dl, [bx]
+mov bx, offset row
+inc [bx]
+mov dh, [bx]
+mov bh, 0
+mov ah, 2
+int 10h  ; move cursor to the right position
+mov al, '-' ; character to print
+mov bx, offset color
+mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+mov bh, 0 ; print on  page 1
+mov cx, 6 ; number of character to print
+mov ah, 9 ; prepare interruption
+int 10h ; printing ; print end of the touch
+pop cx ; restore this value
+mov bx, offset key_off
+add [bx], 6 ; use to change key
+inc cx
+cmp cx, 12
+jnz key ;loop
+
+mov dl, 0
+mov dh, 14
+mov bh, 0
+mov ah, 2
+int 10h  ; move cursor to the right position
+mov al, ' ' ; character to print
+mov bl, 0
+mov bh, 0 ; print on  page 1
+mov cx, 50h ; number of character to print
+mov ah, 9 ; prepare interruption
+int 10h ; printing
 ret
-print_key_row ENDP
+print_piano ENDP
+
+
+
+print_key_end PROC
+;function printing the end of a keyboard
+mov bx, offset key_off
+mov dh, [bx]
+mov bx, offset column
+mov [bx], dh
+mov dl, [bx]
+mov bx, offset row
+inc [bx]
+mov dh, [bx]
+mov bh, 0
+mov ah, 2
+int 10h  ; move cursor to the right position
+mov al, '-' ; character to print
+mov bx, offset color
+mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+mov bh, 0 ; print on  page 1
+mov cx, 6 ; number of character to print
+mov ah, 9 ; prepare interruption
+int 10h ; printing
+ret
+print_key_end ENDP
 
 play_sound_freq PROC
 mov bx, offset pressed_key
@@ -376,7 +454,7 @@ mov [bx], 2416; si (B4)
 jmp ply_snd
 
 ply_snd:
-MOV     DX,5000         ; Number of times to repeat whole routine.
+MOV     DX,10000         ; Number of times to repeat whole routine.
 
 MOV     BX, offset frequency           ; Frequency value.
 
@@ -413,7 +491,6 @@ AND     AL,11111100B     ; AND AL to this value, forcing first two bits low.
 OUT     61H,AL           ; Copy it to port 61H of the PPI Chip
 ret
 play_sound_freq ENDP
-
 
 color db 00001111b
 column db 0 ; must change value in code to display other touch
