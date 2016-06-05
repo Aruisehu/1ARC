@@ -11,7 +11,7 @@ mov dl, 0h ; Floppy Number
 mov dh, 0h ; Head Number
 mov ch, 0h ; Cylinder number
 mov cl, 2h ; Sector Number
-mov al, 3 ; Number of sector to load
+mov al, 2 ; Number of sector to load
 mov ah, 2 ; set the interruption mode
 int 13h   ; Load code pointed in RAM 
 jnc exit
