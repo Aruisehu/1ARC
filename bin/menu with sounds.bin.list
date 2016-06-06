@@ -1,8 +1,8 @@
 EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
  
-menu with sounds.bin -- emu8086 assembler version: 4.03  
+menu with sounds.bin -- emu8086 assembler version: 4.08  
  
-[ 04/06/2016  --  01:02:33 ] 
+[ 06/06/2016  --  15:59:51 ] 
  
 ===================================================================================================
 [LINE]     LOC: MACHINE CODE                          SOURCE
@@ -10,431 +10,529 @@ menu with sounds.bin -- emu8086 assembler version: 4.03
  
 [   1]        :                                       org 7e10h
 [   2]        :                                       
-[   3]    0000: ??                                    call main
-[   4]        :                                       
-[   5]        :                                       ;Main Menu
-[   6]        :                                       ;Use F1, F2, F3 to select the mode
-[   7]        :                                       ;Escape to quit program
-[   8]        :                                       
-[   9]    0003:                                       main PROC
+[   3]        :                                       
+[   4]    0000: ??                                    mov ax, 1000h
+[   5]    0003: ??                                    mov ss, ax; move the stack location in memory
+[   6]        :                                       ;Main Menu
+[   7]        :                                       ;Use F1, F2, F3 to select the mode
+[   8]        :                                       ;Escape to quit program
+[   9]    0005:                                       main:
 [  10]        :                                       ; print the menu
-[  11]    0003: ??                                    mov al, 1
-[  12]    0005: ??                                    	mov bh, 0
-[  13]    0007: ??                                    	mov bl, 0000_1011b ; choose the color
-[  14]    0009: ??                                    	mov cx, msg1end - offset msg1 ; calculate message size.
-[  15]    000C: ??                                    	mov dl, 30; select the column where to print the message
-[  16]    000E: ??                                    	mov dh, 0 ; select the row
-[  17]    0010: ??                                    	mov bp, offset msg1; select the string to be print
-[  18]    0013: ??                                    	mov ah, 13h ; print the string pointed by es:bp
-[  19]    0015: ??                                    	int 10h
-[  20]        :                                       	; don't need to change ah value, so we are doing exactly the same thing
-[  21]    0017: ??                                    	mov cx, menu1end - offset menu1 ; calculate message size.
-[  22]    001A: ??                                    	mov dl, 3
-[  23]    001C: ??                                    	mov dh, 3
-[  24]    001E: ??                                    	mov bp, offset menu1
-[  25]    0021: ??                                    	int 10h
-[  26]        :                                       	
-[  27]    0023: ??                                    	mov cx, menu2end - offset menu2 ; calculate message size.
-[  28]    0026: ??                                    	mov dh, 5
-[  29]    0028: ??                                    	mov bp, offset menu2
-[  30]    002B: ??                                    	int 10h
-[  31]        :                                       	
-[  32]    002D: ??                                    	mov cx, menu3end - offset menu3; calculate message size.
-[  33]    0030: ??                                    	mov dh, 7
-[  34]    0032: ??                                    	mov bp, offset menu3
-[  35]    0035: ??                                    	int 10h
-[  36]        :                                       	
-[  37]    0037: ??                                    	mov cx, menu4end - offset menu4; calculate message size.
-[  38]    003A: ??                                    	mov dh, 11
-[  39]    003C: ??                                    	mov bp, offset menu4
-[  40]    003F: ??                                    	int 10h
-[  41]        :                                       	
-[  42]    0041: ??                                    	mov ah, 0
-[  43]    0043: ??                                    	int 16h
-[  44]    0045: ??                                    	cmp ah, 1
-[  45]    0048: ??                                    	je fin
-[  46]    004A: ??                                    	cmp ah, 10h
-[  47]    004D: ??                                    	je ftp
-[  48]    004F: ??                                    	cmp ah, 3Ch
-[  49]    0052: ??                                    	je pap
-[  50]    0054: ??                                    	cmp ah, 3Dh
-[  51]    0057: ??                                    	je wmp
-[  52]    0059: ??                                    	msg1 db " PIaNOS "
-[  53]    0061:                                       msg1end:
-[  54]    0061: ??                                    menu1 db "F1   Free-To-play"
-[  55]    0072:                                       menu1end:
-[  56]    0072: ??                                    menu2 db "F2   Play a piece"
-[  57]    0083:                                       menu2end:
-[  58]    0083: ??                                    menu3 db "F3   Watch me play"
-[  59]    0095:                                       menu3end:
-[  60]    0095: ??                                    menu4 db "ESC  Exit"
-[  61]    009E:                                       menu4end:
-[  62]        :                                       main ENDP
-[  63]        :                                       
-[  64]        :                                       
-[  65]    009E:                                       fin:
-[  66]    009E: ??                                    int 20h
+[  11]    0005: ??                                    call refresh
+[  12]    0008: ??                                    mov al, ' ' ; character to print
+[  13]    000A: ??                                    mov bl, 00001001b; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+[  14]    000C: ??                                    mov bh, 0 ; print on  page 1
+[  15]    000E: ??                                    mov cx, 4000 ; number of character to print
+[  16]    0011: ??                                    mov ah, 9 ; prepare interruption
+[  17]    0013: ??                                    int 10h
+[  18]    0015: ??                                    mov al, 1
+[  19]    0017: ??                                    mov bh, 0
+[  20]    0019: ??                                    mov bl, 0000_1011b ; choose the color
+[  21]    001B: ??                                    mov cx, msg1end - offset msg1 ; calculate message size.
+[  22]    001E: ??                                    mov dl, 30; select the column where to print the message
+[  23]    0020: ??                                    mov dh, 0 ; select the row
+[  24]    0022: ??                                    mov bp, offset msg1; select the string to be print
+[  25]    0025: ??                                    mov ah, 13h ; print the string pointed by es:bp
+[  26]    0027: ??                                    int 10h
+[  27]        :                                       	; don't need to change ah value, so we are doing exactly the same thing
+[  28]    0029: ??                                    mov cx, menu1end - offset menu1 ; calculate message size.
+[  29]    002C: ??                                    mov dl, 3
+[  30]    002E: ??                                    mov dh, 3
+[  31]    0030: ??                                    mov bp, offset menu1
+[  32]    0033: ??                                    int 10h
+[  33]        :                                       	
+[  34]    0035: ??                                    mov cx, menu2end - offset menu2 ; calculate message size.
+[  35]    0038: ??                                    mov dh, 5
+[  36]    003A: ??                                    mov bp, offset menu2
+[  37]    003D: ??                                    int 10h
+[  38]        :                                       	
+[  39]    003F: ??                                    mov cx, menu3end - offset menu3; calculate message size.
+[  40]    0042: ??                                    mov dh, 7
+[  41]    0044: ??                                    mov bp, offset menu3
+[  42]    0047: ??                                    int 10h
+[  43]        :                                       	
+[  44]    0049: ??                                    mov cx, menu4end - offset menu4; calculate message size.
+[  45]    004C: ??                                    mov dh, 11
+[  46]    004E: ??                                    mov bp, offset menu4
+[  47]    0051: ??                                    int 10h
+[  48]        :                                       
+[  49]    0053: ??                                    mov cx, menu5end - offset menu5; calculate message size.
+[  50]    0056: ??                                    mov dh, 14
+[  51]    0058: ??                                    mov dl, 0
+[  52]    005A: ??                                    mov bp, offset menu5
+[  53]    005D: ??                                    int 10h
+[  54]        :                                       	
+[  55]    005F: ??                                    mov ah, 0
+[  56]    0061: ??                                    int 16h
+[  57]    0063: ??                                    cmp ah, 1
+[  58]    0066: ??                                    je fin
+[  59]    0068: ??                                    cmp ah, 3Bh
+[  60]    006B: ??                                    je ftp
+[  61]    006D: ??                                    cmp ah, 3Ch
+[  62]    0070: ??                                    je pap
+[  63]    0072: ??                                    cmp ah, 3Dh
+[  64]    0075: ??                                    je wmp
+[  65]    007A: ??                                    jne main
+[  66]        :                                       
 [  67]        :                                       
-[  68]    00A0:                                       ftp:
-[  69]    00A0: ??                                    call free_to_play
-[  70]    00A3: ??                                    call main
-[  71]        :                                       
-[  72]    00A6:                                       pap:
-[  73]    00A6: ??                                    call play_a_piece ; doesn't exist for now
-[  74]    00A9: ??                                    call main
-[  75]        :                                       
-[  76]    00AC:                                       wmp:
-[  77]        :                                       ;call watch_me_play ; doesn't exist for now
-[  78]    00AC: ??                                    call main
-[  79]        :                                       
-[  80]        :                                       
-[  81]        :                                       
-[  82]    00AF:                                       free_to_play PROC
-[  83]        :                                       ;piano plays with azertyuiop^$
-[  84]    00AF: ??                                    mov bx, offset pressed_key
-[  85]    00B2: ??                                    mov [bx], 12h
-[  86]    00B5: ??                                    call print_piano
-[  87]    00B8:                                       press_key:
-[  88]    00B8: ??                                    mov ah, 0
-[  89]    00BA: ??                                    int 16h ; wait for a pressed key
-[  90]    00BC: ??                                    mov bx, offset pressed_key
-[  91]    00BF: ??                                    cmp ah, 1 ; escape pressed, we quit the program
-[  92]    00C2: ??                                    je end_free
-[  93]    00C4: ??                                    sub ah, 10h
-[  94]    00C7: ??                                    mov [bx], ah
-[  95]    00C9: ??                                    call print_piano
-[  96]    00CC: ??                                    	call play_sound_freq
-[  97]    00CF: ??                                    jmp press_key
-[  98]    00D1:                                       end_free:
-[  99]    00D1: ??                                    ret
-[ 100]        :                                       free_to_play ENDP
-[ 101]        :                                       
-[ 102]    00D2:                                       play_a_piece PROC
-[ 103]        :                                       ;piano plays with azertyuiop^$
-[ 104]    00D2: ??                                    mov bx, offset pressed_key
-[ 105]    00D5: ??                                    mov [bx], 12h
-[ 106]    00D8: ??                                    call print_piano
-[ 107]    00DB: ??                                    mov bx, offset piece1[0]
-[ 108]    00DE:                                       beginp:
-[ 109]    00DE: ??                                    mov cl, 11
-[ 110]    00E0:                                       press_key1:
-[ 111]    00E0: ??                                    cmp [bx], 13
-[ 112]    00E3: ??                                    je end_play
-[ 113]    00E5: ??                                    cmp [bx], cl
-[ 114]    00E7: ??                                    jne next
-[ 115]    00E9: ??                                    mov al, cl
-[ 116]    00EB: ??                                    mov dl, 6
-[ 117]    00ED: ??                                    mul dl
-[ 118]    00EF: ??                                    push bx
-[ 119]    00F0: ??                                    push cx
-[ 120]    00F1: ??                                    call print_next
-[ 121]    00F4: ??                                    pop cx
-[ 122]    00F5: ??                                    pop bx
-[ 123]    00F6:                                       next:
-[ 124]    00F6: ??                                    cmp cl, 0
-[ 125]    00F9: ??                                    je piano
-[ 126]    00FB: ??                                    dec cl
-[ 127]    00FD: ??                                    jmp press_key1
-[ 128]    00FF:                                       piano:
-[ 129]    00FF: ??                                    mov ah, 0
-[ 130]    0101: ??                                    int 16h ; wait for a pressed key
-[ 131]    0103: ??                                    push bx
-[ 132]    0104: ??                                    mov bx, offset pressed_key
-[ 133]    0107: ??                                    cmp ah, 1 ; escape pressed, we quit the program
-[ 134]    010A: ??                                    je end_play
-[ 135]    010C: ??                                    sub ah, 10h
-[ 136]    010F: ??                                    mov [bx], ah
-[ 137]    0111: ??                                    call print_piano
-[ 138]    0114: ??                                    pop bx
-[ 139]    0115: ??                                    inc bx
-[ 140]    0116: ??                                    jmp beginp
-[ 141]    0118:                                       end_play:
-[ 142]    0118: ??                                    ret
-[ 143]        :                                       play_a_piece ENDP
-[ 144]        :                                       
-[ 145]    0119:                                       print_next PROC
-[ 146]    0119: ??                                    mov dl, al ;set the cursor position on the column
-[ 147]    011B: ??                                    mov dh, 14
-[ 148]    011D: ??                                    mov bh, 0 ; change page's 1 cursor
-[ 149]    011F: ??                                    mov ah, 2 ; prepare interruption
-[ 150]    0121: ??                                    int 10h ; change cursor position
-[ 151]    0123: ??                                    mov al, '-' ; character to print
-[ 152]    0125: ??                                    mov bl, 00001001b; set the color (4 MSB -> background color, 4 LSB-> foreground color)
-[ 153]    0127: ??                                    mov bh, 0 ; print on  page 1
-[ 154]    0129: ??                                    mov cx, 6 ; number of character to print
-[ 155]    012C: ??                                    mov ah, 9 ; prepare interruption
-[ 156]    012E: ??                                    int 10h ; printing
-[ 157]    0130: ??                                    ret
-[ 158]        :                                       print_next ENDP
-[ 159]        :                                       
-[ 160]    0131:                                       print_piano PROC
-[ 161]    0131: ??                                    mov bx, offset column
-[ 162]    0134: ??                                    mov [bx], 0
-[ 163]    0137: ??                                    mov bx, offset key_off
-[ 164]    013A: ??                                    mov [bx], 0; put the value to 0
-[ 165]    013D: ??                                    mov dx, 0000h
-[ 166]    0140: ??                                    mov bh, 0
-[ 167]    0142: ??                                    mov ah, 2
-[ 168]    0144: ??                                    int 10h ; puts the cursor on the first column, first row
-[ 169]    0146: ??                                    mov cx, 0; use as a counter
-[ 170]    0149:                                       key:
-[ 171]    0149: ??                                    mov bx, offset color
-[ 172]    014C: ??                                    mov [bx], 00001111b
-[ 173]    014F: ??                                    mov bx, offset row
-[ 174]    0152: ??                                    mov [bx], 0 ; restore the value of the row
-[ 175]    0155: ??                                    mov bx, offset pressed_key
-[ 176]    0158: ??                                    cmp [bx], cl
-[ 177]    015A: ??                                    jnz continue:
-[ 178]    015C: ??                                    mov bx, offset color
-[ 179]    015F: ??                                    mov [bx], 00001100b
-[ 180]    0162:                                       continue:
-[ 181]    0162: ??                                    push cx ; save the value of the counter
-[ 182]    0163: ??                                    call print_key
-[ 183]    0166: ??                                    pop cx ; restore this value
-[ 184]    0167: ??                                    mov bx, offset key_off
-[ 185]    016A: ??                                    add [bx], 6 ; use to change key
-[ 186]    016D: ??                                    inc cx
-[ 187]    016E: ??                                    cmp cx, 12
-[ 188]    0171: ??                                    jnz key ;loop
-[ 189]        :                                       
-[ 190]    0173: ??                                    mov dl, 0
-[ 191]    0175: ??                                    mov dh, 14
-[ 192]    0177: ??                                    mov bh, 0
-[ 193]    0179: ??                                    mov ah, 2
-[ 194]    017B: ??                                    int 10h  ; move cursor to the right position
-[ 195]    017D: ??                                    mov al, ' ' ; character to print
-[ 196]    017F: ??                                    mov bl, 0
-[ 197]    0181: ??                                    mov bh, 0 ; print on  page 1
-[ 198]    0183: ??                                    mov cx, 50h ; number of character to print
-[ 199]    0186: ??                                    mov ah, 9 ; prepare interruption
-[ 200]    0188: ??                                    int 10h ; printing
-[ 201]    018A: ??                                    ret
-[ 202]        :                                       print_piano ENDP
-[ 203]        :                                       
-[ 204]    018B:                                       print_key PROC
-[ 205]    018B: ??                                    mov bx, offset key_off
-[ 206]    018E: ??                                    mov dh, [bx]
-[ 207]    0190: ??                                    mov bx, offset column
-[ 208]    0193: ??                                    mov [bx], dh
-[ 209]    0195: ??                                    mov dl, [bx] ; look which key to print (by looking which offset of key we have)
-[ 210]    0197: ??                                    mov cx, 8
-[ 211]    019A: ??                                    mov bx, offset row
-[ 212]    019D: ??                                    mov dh, [bx] ; load cursor's row
-[ 213]    019F: ??                                    mov bh, 0
-[ 214]    01A1: ??                                    mov ah, 2
-[ 215]    01A3: ??                                    int 10h ; move the cursor to print this key
-[ 216]    01A5: ??                                    call print_key_row ; call function
-[ 217]    01A8: ??                                    mov cx, 12 ;use to loop
-[ 218]    01AB:                                       etiq:
-[ 219]    01AB: ??                                    mov bx, offset key_off
-[ 220]    01AE: ??                                    mov dh, [bx]
-[ 221]    01B0: ??                                    mov bx, offset column
-[ 222]    01B3: ??                                    mov [bx], dh
-[ 223]    01B5: ??                                    mov dl, [bx]
-[ 224]    01B7: ??                                    mov bx, offset row ;restore the value
-[ 225]    01BA: ??                                    inc [bx]
-[ 226]    01BC: ??                                    mov dh, [bx]
-[ 227]    01BE: ??                                    mov bh, 0
-[ 228]    01C0: ??                                    mov ah, 2
-[ 229]    01C2: ??                                    int 10h ;move cursor
-[ 230]    01C4: ??                                    push cx ; store cx (modified in function)
-[ 231]    01C5: ??                                    call print_key_row
-[ 232]    01C8: ??                                    pop cx ;restore cx value
-[ 233]    01C9: ??                                    dec cx
-[ 234]    01CA: ??                                    cmp cx, 0
-[ 235]    01CD: ??                                    jnz etiq ; loop while cx>0
-[ 236]    01CF: ??                                    call print_key_end ; print end of the touch
-[ 237]    01D2: ??                                    ret
-[ 238]        :                                       print_key ENDP
-[ 239]        :                                       
-[ 240]    01D3:                                       print_key_end PROC
-[ 241]        :                                       ;function printing the end of a keyboard
-[ 242]    01D3: ??                                    mov bx, offset key_off
-[ 243]    01D6: ??                                    mov dh, [bx]
-[ 244]    01D8: ??                                    mov bx, offset column
-[ 245]    01DB: ??                                    mov [bx], dh
-[ 246]    01DD: ??                                    mov dl, [bx]
-[ 247]    01DF: ??                                    mov bx, offset row
-[ 248]    01E2: ??                                    inc [bx]
-[ 249]    01E4: ??                                    mov dh, [bx]
-[ 250]    01E6: ??                                    mov bh, 0
-[ 251]    01E8: ??                                    mov ah, 2
-[ 252]    01EA: ??                                    int 10h  ; move cursor to the right position
-[ 253]    01EC: ??                                    mov al, '-' ; character to print
-[ 254]    01EE: ??                                    mov bx, offset color
-[ 255]    01F1: ??                                    mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
-[ 256]    01F3: ??                                    mov bh, 0 ; print on  page 1
-[ 257]    01F5: ??                                    mov cx, 6 ; number of character to print
-[ 258]    01F8: ??                                    mov ah, 9 ; prepare interruption
-[ 259]    01FA: ??                                    int 10h ; printing
-[ 260]    01FC: ??                                    ret
-[ 261]        :                                       print_key_end ENDP
-[ 262]        :                                       
-[ 263]    01FD:                                       print_key_row PROC
-[ 264]        :                                       ;function for printing a part of a keyboard
-[ 265]    01FD: ??                                    mov al, '|' ; character to print
-[ 266]    01FF: ??                                    mov bx, offset color
-[ 267]    0202: ??                                    mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
-[ 268]    0204: ??                                    mov bh, 0 ; print on  page 1
-[ 269]    0206: ??                                    mov cx, 1 ; number of character to print
-[ 270]    0209: ??                                    mov ah, 9 ; prepare interruption
-[ 271]    020B: ??                                    int 10h ; printing
-[ 272]    020D: ??                                    mov bx, offset column ; pick up the address of the column
-[ 273]    0210: ??                                    inc [bx] ; add 1 to the column
-[ 274]    0212: ??                                    mov dl, [bx] ;set the cursor position on the column
-[ 275]    0214: ??                                    mov bh, 0 ; change page's 1 cursor
-[ 276]    0216: ??                                    mov ah, 2 ; prepare interruption
-[ 277]    0218: ??                                    int 10h ; change cursor position
-[ 278]    021A: ??                                    mov al, ' '
-[ 279]    021C: ??                                    mov bx, offset color
-[ 280]    021F: ??                                    mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
-[ 281]    0221: ??                                    mov bh, 0 ; print on  page 1
-[ 282]    0223: ??                                    mov cx, 4
-[ 283]    0226: ??                                    mov ah, 9
-[ 284]    0228: ??                                    int 10h
-[ 285]    022A: ??                                    mov bx, offset column
-[ 286]    022D: ??                                    add [bx], 4
-[ 287]    0230: ??                                    mov dl, [bx]
-[ 288]    0232: ??                                    mov bh, 0
-[ 289]    0234: ??                                    mov ah, 2
-[ 290]    0236: ??                                    int 10h
-[ 291]    0238: ??                                    mov al, '|'
-[ 292]    023A: ??                                    mov bx, offset color
-[ 293]    023D: ??                                    mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
-[ 294]    023F: ??                                    mov bh, 0 ; print on  page 1
-[ 295]    0241: ??                                    mov cx, 1
-[ 296]    0244: ??                                    mov ah, 9
-[ 297]    0246: ??                                    int 10h
-[ 298]    0248: ??                                    ret
-[ 299]        :                                       print_key_row ENDP
-[ 300]        :                                       
-[ 301]    0249:                                       play_sound_freq PROC
-[ 302]    0249: ??                                    	mov bx, offset pressed_key
-[ 303]    024C: ??                                    	cmp [bx], 0
-[ 304]    024F: ??                                    	je freq_key_0
-[ 305]    0251: ??                                    	cmp [bx], 1
-[ 306]    0254: ??                                    	je freq_key_1
-[ 307]    0256: ??                                    	cmp [bx], 2
-[ 308]    0259: ??                                    	je freq_key_2
-[ 309]    025B: ??                                    	cmp [bx], 3
-[ 310]    025E: ??                                    	je freq_key_3
-[ 311]    0260: ??                                    	cmp [bx], 4
-[ 312]    0263: ??                                    	je freq_key_4
-[ 313]    0265: ??                                    	cmp [bx], 5
-[ 314]    0268: ??                                    	je freq_key_5
-[ 315]    026A: ??                                    	cmp [bx], 6
-[ 316]    026D: ??                                    	je freq_key_6
-[ 317]    026F: ??                                    	cmp [bx], 7
-[ 318]    0272: ??                                    	je freq_key_7
-[ 319]    0274: ??                                    	cmp [bx], 8
-[ 320]    0277: ??                                    	je freq_key_8
-[ 321]    0279: ??                                    	cmp [bx], 9
-[ 322]    027C: ??                                    	je freq_key_9
-[ 323]    027E: ??                                    	cmp [bx], 10
-[ 324]    0281: ??                                    	je freq_key_10
-[ 325]    0283: ??                                    	cmp [bx], 11
-[ 326]    0286: ??                                    	je freq_key_11
-[ 327]    0288: ??                                    jmp ply_snd
-[ 328]        :                                       
-[ 329]    028A:                                       	freq_key_0:
-[ 330]    028A: ??                                    	   mov bx, offset frequency
-[ 331]    028D: ??                                    	   mov [bx], 4560; do (C4)
-[ 332]    0291: ??                                    	   jmp ply_snd
-[ 333]    0293:                                       	freq_key_1:
-[ 334]    0293: ??                                    	   mov bx, offset frequency
-[ 335]    0296: ??                                    	   mov [bx], 4305; do# (C4#)
-[ 336]    029A: ??                                    	   jmp ply_snd
-[ 337]    029C:                                       	freq_key_2:
-[ 338]    029C: ??                                    	   mov bx, offset frequency
-[ 339]    029F: ??                                    	   mov [bx], 4063; re (D4)
-[ 340]    02A3: ??                                    	   jmp ply_snd
-[ 341]    02A5:                                       	freq_key_3:
-[ 342]    02A5: ??                                    	   mov bx, offset frequency
-[ 343]    02A8: ??                                    	   mov [bx], 3835; re# (D4#)
-[ 344]    02AC: ??                                    	   jmp ply_snd
-[ 345]    02AE:                                       	freq_key_4:
-[ 346]    02AE: ??                                    	   mov bx, offset frequency
-[ 347]    02B1: ??                                    	   mov [bx], 3620; mi (E4)
-[ 348]    02B5: ??                                    	   jmp ply_snd
-[ 349]    02B7:                                       	freq_key_5:
-[ 350]    02B7: ??                                    	   mov bx, offset frequency
-[ 351]    02BA: ??                                    	   mov [bx], 3417; fa (F4)
-[ 352]    02BE: ??                                    	   jmp ply_snd
-[ 353]    02C0:                                       	freq_key_6:
-[ 354]    02C0: ??                                    	   mov bx, offset frequency
-[ 355]    02C3: ??                                    	   mov [bx], 3225; fa# (F4#)
-[ 356]    02C7: ??                                    	   jmp ply_snd
-[ 357]    02C9:                                       	freq_key_7:
-[ 358]    02C9: ??                                    	   mov bx, offset frequency
-[ 359]    02CC: ??                                    	   mov [bx], 3044; sol (G4)
-[ 360]    02D0: ??                                    	   jmp ply_snd
-[ 361]    02D2:                                       	freq_key_8:
-[ 362]    02D2: ??                                    	   mov bx, offset frequency
-[ 363]    02D5: ??                                    	   mov [bx], 2873; sol# (G4#)
-[ 364]    02D9: ??                                    	   jmp ply_snd
-[ 365]    02DB:                                       	freq_key_9:
-[ 366]    02DB: ??                                    	   mov bx, offset frequency
-[ 367]    02DE: ??                                    	   mov [bx], 2712; la (A4)
-[ 368]    02E2: ??                                    	   jmp ply_snd
-[ 369]    02E4:                                       	freq_key_10:
-[ 370]    02E4: ??                                    	   mov bx, offset frequency
-[ 371]    02E7: ??                                    	   mov [bx], 2560; la# (A4#)
-[ 372]    02EB: ??                                    	   jmp ply_snd
-[ 373]    02ED:                                       	freq_key_11:
-[ 374]    02ED: ??                                    	   mov bx, offset frequency
-[ 375]    02F0: ??                                    	   mov [bx], 2416; si (B4)
-[ 376]    02F4: ??                                    	   jmp ply_snd
-[ 377]        :                                       			
-[ 378]    02F6:                                       	ply_snd:
-[ 379]    02F6: ??                                    	    MOV     DX,5000         ; Number of times to repeat whole routine.
+[  68]    007C:                                       fin:
+[  69]    007C: ??                                    int 20h
+[  70]        :                                       
+[  71]    007E:                                       ftp:
+[  72]    007E: ??                                    call refresh
+[  73]    0081: ??                                    mov al, ' ' ; character to print
+[  74]    0083: ??                                    mov bl, 00001001b; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+[  75]    0085: ??                                    mov bh, 0 ; print on  page 1
+[  76]    0087: ??                                    mov cx, 4000 ; number of character to print
+[  77]    008A: ??                                    mov ah, 9 ; prepare interruption
+[  78]    008C:                                       press_key:
+[  79]    008C: ??                                    call print_piano
+[  80]    008F: ??                                    mov ah, 0
+[  81]    0091: ??                                    int 16h ; wait for a pressed key
+[  82]    0093: ??                                    mov bx, offset pressed_key
+[  83]    0096: ??                                    cmp ah, 1 ; escape pressed, we quit the program
+[  84]    0099: ??                                    je end_free
+[  85]    009B: ??                                    sub ah, 10h
+[  86]    009E: ??                                    cmp ah, 12
+[  87]    00A1: ??                                    jge press_key ;user doesn't press the right key
+[  88]    00A3: ??                                    mov [bx], ah
+[  89]    00A5: ??                                    call print_piano
+[  90]    00A8: ??                                    	call play_sound_freq
+[  91]    00AB: ??                                    jmp press_key
+[  92]    00AD:                                       end_free:
+[  93]    00AD: ??                                    jmp main
+[  94]        :                                       
+[  95]    00B0:                                       pap:
+[  96]    00B0: ??                                    call refresh
+[  97]    00B3: ??                                    mov al, ' ' ; character to print
+[  98]    00B5: ??                                    mov bl, 00001001b; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+[  99]    00B7: ??                                    mov bh, 0 ; print on  page 1
+[ 100]    00B9: ??                                    mov cx, 4000 ; number of character to print
+[ 101]    00BC: ??                                    mov ah, 9 ; prepare interruption
+[ 102]    00BE:                                       menupap:
+[ 103]    00BE: ??                                    mov al, 1
+[ 104]    00C0: ??                                    mov bh, 0
+[ 105]    00C2: ??                                    mov bl, 0000_1111b ; choose the color
+[ 106]    00C4: ??                                    mov cx, pap1end - offset pap1 ; calculate message size.
+[ 107]    00C7: ??                                    mov dl, 25; select the column where to print the message
+[ 108]    00C9: ??                                    mov dh, 0 ; select the row
+[ 109]    00CB: ??                                    mov bp, offset pap1; select the string to be print
+[ 110]    00CE: ??                                    mov ah, 13h ; print the string pointed by es:bp
+[ 111]    00D0: ??                                    int 10h
+[ 112]    00D2: ??                                    mov cx, pap2end - offset pap2 ; calculate message size.
+[ 113]    00D5: ??                                    mov dl, 3
+[ 114]    00D7: ??                                    mov dh, 3
+[ 115]    00D9: ??                                    mov bp, offset pap2
+[ 116]    00DC: ??                                    int 10h
+[ 117]    00DE: ??                                    mov cx, pap3end - offset pap3 ; calculate message size.
+[ 118]    00E1: ??                                    mov dh, 5
+[ 119]    00E3: ??                                    mov bp, offset pap3
+[ 120]    00E6: ??                                    int 10h
+[ 121]    00E8: ??                                    mov cx, pap4end - offset pap4 ; calculate message size.
+[ 122]    00EB: ??                                    mov dh, 7
+[ 123]    00ED: ??                                    mov bp, offset pap4
+[ 124]    00F0: ??                                    int 10h
+[ 125]    00F2: ??                                    mov ah, 0
+[ 126]    00F4: ??                                    int 16h ;menu "Pick a song"
+[ 127]    00F6: ??                                    cmp ah, 3Bh
+[ 128]    00F9: ??                                    jne other1
+[ 129]    00FB: ??                                    mov bx, offset piece1[0]
+[ 130]    00FE: ??                                    push bx
+[ 131]    00FF: ??                                    je play
+[ 132]    0101:                                       other1:
+[ 133]    0101: ??                                    cmp ah, 1h
+[ 134]    0104: ??                                    jne other2
+[ 135]    0106: ??                                    ret
+[ 136]    0107:                                       other2:
+[ 137]    0107: ??                                    jmp menupap ; if invalid key, wait for a valid one
+[ 138]        :                                       ;piano plays with azertyuiop^$
+[ 139]    0109:                                       play:
+[ 140]    0109: ??                                    pop bx
+[ 141]    010A: ??                                    mov al, ' ' ; character to print
+[ 142]    010C: ??                                    mov bl, 00001001b; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+[ 143]    010E: ??                                    mov bh, 0 ; print on  page 1
+[ 144]    0110: ??                                    mov cx, 4000 ; number of character to print
+[ 145]    0113: ??                                    mov ah, 9 ; prepare interruption
+[ 146]    0115: ??                                    call print_piano
+[ 147]    0118:                                       beginp:
+[ 148]    0118: ??                                    mov cl, 11
+[ 149]    011A:                                       press_key1:
+[ 150]    011A: ??                                    cmp [bx], 13
+[ 151]    011D: ??                                    je end_play
+[ 152]    011F: ??                                    cmp [bx], cl
+[ 153]    0121: ??                                    jne next
+[ 154]    0123: ??                                    mov al, cl
+[ 155]    0125: ??                                    mov dl, 6
+[ 156]    0127: ??                                    mul dl
+[ 157]    0129: ??                                    push bx
+[ 158]    012A: ??                                    push cx
+[ 159]    012B: ??                                    call print_next
+[ 160]    012E: ??                                    pop cx
+[ 161]    012F: ??                                    pop bx
+[ 162]    0130:                                       next:
+[ 163]    0130: ??                                    cmp cl, 0
+[ 164]    0133: ??                                    je piano
+[ 165]    0135: ??                                    dec cl
+[ 166]    0137: ??                                    jmp press_key1
+[ 167]    0139:                                       piano:
+[ 168]    0139: ??                                    mov ah, 0
+[ 169]    013B: ??                                    int 16h ; wait for a pressed key
+[ 170]    013D: ??                                    push bx
+[ 171]    013E: ??                                    mov bx, offset pressed_key
+[ 172]    0141: ??                                    cmp ah, 1 ; escape pressed, we quit the program
+[ 173]    0144: ??                                    je end_play
+[ 174]    0146: ??                                    sub ah, 10h
+[ 175]    0149: ??                                    mov [bx], ah
+[ 176]    014B: ??                                    call print_piano
+[ 177]    014E: ??                                    call play_sound_freq
+[ 178]    0151: ??                                    pop bx
+[ 179]    0152: ??                                    inc bx
+[ 180]    0153: ??                                    jmp beginp
+[ 181]    0155:                                       end_play:
+[ 182]    0155: ??                                    jmp main
+[ 183]        :                                       
+[ 184]    0158:                                       wmp:
+[ 185]        :                                       ;call watch_me_play ; doesn't exist for now
+[ 186]    0158: ??                                    jmp main
+[ 187]        :                                       
+[ 188]    015B:                                       refresh PROC
+[ 189]        :                                       ;use to make the screen white
+[ 190]    015B: ??                                    mov cl, 26
+[ 191]    015D: ??                                    xor bx, bx ;put bx to 0
+[ 192]    015F:                                       rowr:
+[ 193]    015F: ??                                    dec cl
+[ 194]    0161: ??                                    mov dh, cl
+[ 195]    0163: ??                                    mov dl, 0
+[ 196]    0165: ??                                    mov ah, 2
+[ 197]    0167: ??                                    int 10h
+[ 198]    0169: ??                                    mov al, ' ' ; character to print
+[ 199]    016B: ??                                    push cx
+[ 200]    016C: ??                                    mov cx, 80 ; number of character to print
+[ 201]    016F: ??                                    mov ah, 9 ; prepare interruption
+[ 202]    0171: ??                                    int 10h
+[ 203]    0173: ??                                    pop cx
+[ 204]    0174: ??                                    cmp cl, 0
+[ 205]    0177: ??                                    jne rowr
+[ 206]    0179: ??                                    ret
+[ 207]        :                                       refresh ENDP
+[ 208]        :                                       
+[ 209]    017A:                                       print_next PROC
+[ 210]    017A: ??                                    mov dl, al ;set the cursor position on the column
+[ 211]    017C: ??                                    mov dh, 14
+[ 212]    017E: ??                                    mov bh, 0 ; change page's 1 cursor
+[ 213]    0180: ??                                    mov ah, 2 ; prepare interruption
+[ 214]    0182: ??                                    int 10h ; change cursor position
+[ 215]    0184: ??                                    mov al, '-' ; character to print
+[ 216]    0186: ??                                    mov bl, 00001001b; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+[ 217]    0188: ??                                    mov bh, 0 ; print on  page 1
+[ 218]    018A: ??                                    mov cx, 6 ; number of character to print
+[ 219]    018D: ??                                    mov ah, 9 ; prepare interruption
+[ 220]    018F: ??                                    int 10h ; printing
+[ 221]    0191: ??                                    ret
+[ 222]        :                                       print_next ENDP
+[ 223]        :                                       
+[ 224]    0192:                                       print_piano PROC
+[ 225]    0192: ??                                    call refresh
+[ 226]    0195: ??                                    mov bx, offset column
+[ 227]    0198: ??                                    mov [bx], 0
+[ 228]    019B: ??                                    mov bx, offset key_off
+[ 229]    019E: ??                                    mov [bx], 0; put the value to 0
+[ 230]    01A1: ??                                    mov dx, 0000h
+[ 231]    01A4: ??                                    mov bh, 0
+[ 232]    01A6: ??                                    mov ah, 2
+[ 233]    01A8: ??                                    int 10h ; puts the cursor on the first column, first row
+[ 234]    01AA: ??                                    mov cx, 0; use as a counter
+[ 235]    01AD:                                       key:
+[ 236]    01AD: ??                                    mov bx, offset color
+[ 237]    01B0: ??                                    mov [bx], 00001111b
+[ 238]    01B3: ??                                    mov bx, offset row
+[ 239]    01B6: ??                                    mov [bx], 0 ; restore the value of the row
+[ 240]    01B9: ??                                    mov bx, offset pressed_key
+[ 241]    01BC: ??                                    cmp [bx], cl
+[ 242]    01BE: ??                                    jnz continue:
+[ 243]    01C0: ??                                    mov bx, offset color
+[ 244]    01C3: ??                                    mov [bx], 00001100b
+[ 245]    01C6:                                       continue:
+[ 246]    01C6: ??                                    push cx ; save the value of the counter
+[ 247]    01C7: ??                                    mov bx, offset key_off
+[ 248]    01CA: ??                                    mov dh, [bx]
+[ 249]    01CC: ??                                    mov bx, offset column
+[ 250]    01CF: ??                                    mov [bx], dh
+[ 251]    01D1: ??                                    mov dl, [bx] ; look which key to print (by looking which offset of key we have)
+[ 252]    01D3: ??                                    mov cx, 8
+[ 253]    01D6: ??                                    mov bx, offset row
+[ 254]    01D9: ??                                    mov dh, [bx] ; load cursor's row
+[ 255]    01DB: ??                                    mov bh, 0
+[ 256]    01DD: ??                                    mov ah, 2
+[ 257]    01DF: ??                                    int 10h ; move the cursor to print this key
+[ 258]    01E1: ??                                    mov al, '|' ; character to print
+[ 259]    01E3: ??                                    mov bx, offset color
+[ 260]    01E6: ??                                    mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+[ 261]    01E8: ??                                    mov bh, 0 ; print on  page 1
+[ 262]    01EA: ??                                    mov cx, 1 ; number of character to print
+[ 263]    01ED: ??                                    mov ah, 9 ; prepare interruption
+[ 264]    01EF: ??                                    int 10h ; printing
+[ 265]    01F1: ??                                    mov bx, offset column ; pick up the address of the column
+[ 266]    01F4: ??                                    inc [bx] ; add 1 to the column
+[ 267]    01F6: ??                                    mov dl, [bx] ;set the cursor position on the column
+[ 268]    01F8: ??                                    mov bh, 0 ; change page's 1 cursor
+[ 269]    01FA: ??                                    mov ah, 2 ; prepare interruption
+[ 270]    01FC: ??                                    int 10h ; change cursor position
+[ 271]    01FE: ??                                    mov al, ' '
+[ 272]    0200: ??                                    mov bx, offset color
+[ 273]    0203: ??                                    mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+[ 274]    0205: ??                                    mov bh, 0 ; print on  page 1
+[ 275]    0207: ??                                    mov cx, 4
+[ 276]    020A: ??                                    mov ah, 9
+[ 277]    020C: ??                                    int 10h
+[ 278]    020E: ??                                    mov bx, offset column
+[ 279]    0211: ??                                    add [bx], 4
+[ 280]    0214: ??                                    mov dl, [bx]
+[ 281]    0216: ??                                    mov bh, 0
+[ 282]    0218: ??                                    mov ah, 2
+[ 283]    021A: ??                                    int 10h
+[ 284]    021C: ??                                    mov al, '|'
+[ 285]    021E: ??                                    mov bx, offset color
+[ 286]    0221: ??                                    mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+[ 287]    0223: ??                                    mov bh, 0 ; print on  page 1
+[ 288]    0225: ??                                    mov cx, 1
+[ 289]    0228: ??                                    mov ah, 9
+[ 290]    022A: ??                                    int 10h
+[ 291]    022C: ??                                    mov cx, 12 ;use to loop
+[ 292]    022F:                                       etiq:
+[ 293]    022F: ??                                    mov bx, offset key_off
+[ 294]    0232: ??                                    mov dh, [bx]
+[ 295]    0234: ??                                    mov bx, offset column
+[ 296]    0237: ??                                    mov [bx], dh
+[ 297]    0239: ??                                    mov dl, [bx]
+[ 298]    023B: ??                                    mov bx, offset row ;restore the value
+[ 299]    023E: ??                                    inc [bx]
+[ 300]    0240: ??                                    mov dh, [bx]
+[ 301]    0242: ??                                    mov bh, 0
+[ 302]    0244: ??                                    mov ah, 2
+[ 303]    0246: ??                                    int 10h ;move cursor
+[ 304]    0248: ??                                    push cx ; store cx (modified in function)
+[ 305]    0249: ??                                    mov al, '|' ; character to print
+[ 306]    024B: ??                                    mov bx, offset color
+[ 307]    024E: ??                                    mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+[ 308]    0250: ??                                    mov bh, 0 ; print on  page 1
+[ 309]    0252: ??                                    mov cx, 1 ; number of character to print
+[ 310]    0255: ??                                    mov ah, 9 ; prepare interruption
+[ 311]    0257: ??                                    int 10h ; printing
+[ 312]    0259: ??                                    mov bx, offset column ; pick up the address of the column
+[ 313]    025C: ??                                    inc [bx] ; add 1 to the column
+[ 314]    025E: ??                                    mov dl, [bx] ;set the cursor position on the column
+[ 315]    0260: ??                                    mov bh, 0 ; change page's 1 cursor
+[ 316]    0262: ??                                    mov ah, 2 ; prepare interruption
+[ 317]    0264: ??                                    int 10h ; change cursor position
+[ 318]    0266: ??                                    mov al, ' '
+[ 319]    0268: ??                                    mov bx, offset color
+[ 320]    026B: ??                                    mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+[ 321]    026D: ??                                    mov bh, 0 ; print on  page 1
+[ 322]    026F: ??                                    mov cx, 4
+[ 323]    0272: ??                                    mov ah, 9
+[ 324]    0274: ??                                    int 10h
+[ 325]    0276: ??                                    mov bx, offset column
+[ 326]    0279: ??                                    add [bx], 4
+[ 327]    027C: ??                                    mov dl, [bx]
+[ 328]    027E: ??                                    mov bh, 0
+[ 329]    0280: ??                                    mov ah, 2
+[ 330]    0282: ??                                    int 10h
+[ 331]    0284: ??                                    mov al, '|'
+[ 332]    0286: ??                                    mov bx, offset color
+[ 333]    0289: ??                                    mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+[ 334]    028B: ??                                    mov bh, 0 ; print on  page 1
+[ 335]    028D: ??                                    mov cx, 1
+[ 336]    0290: ??                                    mov ah, 9
+[ 337]    0292: ??                                    int 10h
+[ 338]    0294: ??                                    pop cx ;restore cx value
+[ 339]    0295: ??                                    dec cx
+[ 340]    0296: ??                                    cmp cx, 0
+[ 341]    0299: ??                                    jnz etiq ; loop while cx>0
+[ 342]    029B: ??                                    mov bx, offset key_off
+[ 343]    029E: ??                                    mov dh, [bx]
+[ 344]    02A0: ??                                    mov bx, offset column
+[ 345]    02A3: ??                                    mov [bx], dh
+[ 346]    02A5: ??                                    mov dl, [bx]
+[ 347]    02A7: ??                                    mov bx, offset row
+[ 348]    02AA: ??                                    inc [bx]
+[ 349]    02AC: ??                                    mov dh, [bx]
+[ 350]    02AE: ??                                    mov bh, 0
+[ 351]    02B0: ??                                    mov ah, 2
+[ 352]    02B2: ??                                    int 10h  ; move cursor to the right position
+[ 353]    02B4: ??                                    mov al, '-' ; character to print
+[ 354]    02B6: ??                                    mov bx, offset color
+[ 355]    02B9: ??                                    mov bl,[bx]; set the color (4 MSB -> background color, 4 LSB-> foreground color)
+[ 356]    02BB: ??                                    mov bh, 0 ; print on  page 1
+[ 357]    02BD: ??                                    mov cx, 6 ; number of character to print
+[ 358]    02C0: ??                                    mov ah, 9 ; prepare interruption
+[ 359]    02C2: ??                                    int 10h ; printing ; print end of the touch
+[ 360]    02C4: ??                                    pop cx ; restore this value
+[ 361]    02C5: ??                                    mov bx, offset key_off
+[ 362]    02C8: ??                                    add [bx], 6 ; use to change key
+[ 363]    02CB: ??                                    inc cx
+[ 364]    02CC: ??                                    cmp cx, 12
+[ 365]    02CF: ??                                    jnz key ;loop
+[ 366]        :                                       
+[ 367]    02D4: ??                                    mov dl, 0
+[ 368]    02D6: ??                                    mov dh, 14
+[ 369]    02D8: ??                                    mov bh, 0
+[ 370]    02DA: ??                                    mov ah, 2
+[ 371]    02DC: ??                                    int 10h  ; move cursor to the right position
+[ 372]    02DE: ??                                    mov al, ' ' ; character to print
+[ 373]    02E0: ??                                    mov bl, 0
+[ 374]    02E2: ??                                    mov bh, 0 ; print on  page 1
+[ 375]    02E4: ??                                    mov cx, 50h ; number of character to print
+[ 376]    02E7: ??                                    mov ah, 9 ; prepare interruption
+[ 377]    02E9: ??                                    int 10h ; printing
+[ 378]    02EB: ??                                    ret
+[ 379]        :                                       print_piano ENDP
 [ 380]        :                                       
-[ 381]    02F9: ??                                    	MOV     BX, offset frequency           ; Frequency value.
-[ 382]        :                                       
-[ 383]    02FC: ??                                    	MOV     AL, 10110110B    ; The Magic Number (use this binary number only)
-[ 384]    02FE: ??                                    	OUT     43H, AL          ; Send it to the initializing port 43H Timer 2.
-[ 385]        :                                       
-[ 386]    0300:                                       	NEXT_FREQUENCY:          ; This is were we will jump back to 2000 times.
-[ 387]        :                                       
-[ 388]    0300: ??                                    	MOV     AX, [BX]           ; Move our Frequency value into AX.
-[ 389]        :                                       
-[ 390]    0302: ??                                    	OUT     42H, AL          ; Send LSB to port 42H.
-[ 391]    0304: ??                                    	MOV     AL, AH           ; Move MSB into AL
-[ 392]    0306: ??                                    	OUT     42H, AL          ; Send MSB to port 42H.
-[ 393]        :                                       
-[ 394]    0308: ??                                    	IN      AL, 61H          ; Get current value of port 61H.
-[ 395]    030A: ??                                    	OR      AL, 00000011B    ; OR AL to this value, forcing first two bits high.
-[ 396]    030C: ??                                    	OUT     61H, AL          ; Copy it to port 61H of the PPI Chip
-[ 397]        :                                       							 ; to turn ON the speaker.
-[ 398]        :                                       
-[ 399]    030E: ??                                    	MOV     CX, 100          ; Repeat loop 100 times
-[ 400]    0311:                                       	DELAY_LOOP:              ; Here is where we loop back too.
-[ 401]    0311: ??                                    	LOOP    DELAY_LOOP       ; Jump repeatedly to DELAY_LOOP until CX = 0
-[ 402]        :                                       
-[ 403]    0313: ??                                    	DEC     DX               ; Decrement repeat routine count
-[ 404]        :                                       
-[ 405]    0314: ??                                    	CMP     DX, 0            ; Is DX (repeat count) = to 0
-[ 406]    0317: ??                                    	JNZ     NEXT_FREQUENCY   ; If not jump to NEXT_FREQUENCY
-[ 407]        :                                       							 ; and do whole routine again.
+[ 381]    02EC:                                       play_sound_freq PROC
+[ 382]    02EC: ??                                    	mov bx, offset pressed_key
+[ 383]    02EF: ??                                    	cmp [bx], 0
+[ 384]    02F2: ??                                    	je freq_key_0
+[ 385]    02F4: ??                                    	cmp [bx], 1
+[ 386]    02F7: ??                                    	je freq_key_1
+[ 387]    02F9: ??                                    	cmp [bx], 2
+[ 388]    02FC: ??                                    	je freq_key_2
+[ 389]    02FE: ??                                    	cmp [bx], 3
+[ 390]    0301: ??                                    	je freq_key_3
+[ 391]    0303: ??                                    	cmp [bx], 4
+[ 392]    0306: ??                                    	je freq_key_4
+[ 393]    0308: ??                                    	cmp [bx], 5
+[ 394]    030B: ??                                    	je freq_key_5
+[ 395]    030D: ??                                    	cmp [bx], 6
+[ 396]    0310: ??                                    	je freq_key_6
+[ 397]    0312: ??                                    	cmp [bx], 7
+[ 398]    0315: ??                                    	je freq_key_7
+[ 399]    0317: ??                                    	cmp [bx], 8
+[ 400]    031A: ??                                    	je freq_key_8
+[ 401]    031C: ??                                    	cmp [bx], 9
+[ 402]    031F: ??                                    	je freq_key_9
+[ 403]    0321: ??                                    	cmp [bx], 10
+[ 404]    0324: ??                                    	je freq_key_10
+[ 405]    0326: ??                                    	cmp [bx], 11
+[ 406]    0329: ??                                    	je freq_key_11
+[ 407]    032B: ??                                    jmp ply_snd
 [ 408]        :                                       
-[ 409]        :                                       							 ; Else DX = 0 time to turn speaker OFF
-[ 410]        :                                       
-[ 411]    0319: ??                                    	IN      AL,61H           ; Get current value of port 61H.
-[ 412]    031B: ??                                    	AND     AL,11111100B     ; AND AL to this value, forcing first two bits low.
-[ 413]    031D: ??                                    	OUT     61H,AL           ; Copy it to port 61H of the PPI Chip
-[ 414]    031F: ??                                    	ret
-[ 415]        :                                       play_sound_freq ENDP
-[ 416]        :                                       
-[ 417]        :                                       
-[ 418]    0320: ??                                    color db 00001111b
-[ 419]    0321: ??                                    column db 0 ; must change value in code to display other touch
-[ 420]    0322: ??                                    row db 0
-[ 421]    0323: ??                                    key_off db 0
-[ 422]    0324: ??                                    pressed_key db 12h
-[ 423]    0325: ??                                    frequency dw 12h
-[ 424]    0327: ??                                    next_key db 12h
-[ 425]    0328: ??                                    piece1 db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
-[ 426]        :                                       
-[ 427]        :                                       
+[ 409]    032D:                                       	freq_key_0:
+[ 410]    032D: ??                                    	   mov bx, offset frequency
+[ 411]    0330: ??                                    	   mov [bx], 4560; do (C4)
+[ 412]    0334: ??                                    	   jmp ply_snd
+[ 413]    0336:                                       	freq_key_1:
+[ 414]    0336: ??                                    	   mov bx, offset frequency
+[ 415]    0339: ??                                    	   mov [bx], 4305; do# (C4#)
+[ 416]    033D: ??                                    	   jmp ply_snd
+[ 417]    033F:                                       	freq_key_2:
+[ 418]    033F: ??                                    	   mov bx, offset frequency
+[ 419]    0342: ??                                    	   mov [bx], 4063; re (D4)
+[ 420]    0346: ??                                    	   jmp ply_snd
+[ 421]    0348:                                       	freq_key_3:
+[ 422]    0348: ??                                    	   mov bx, offset frequency
+[ 423]    034B: ??                                    	   mov [bx], 3835; re# (D4#)
+[ 424]    034F: ??                                    	   jmp ply_snd
+[ 425]    0351:                                       	freq_key_4:
+[ 426]    0351: ??                                    	   mov bx, offset frequency
+[ 427]    0354: ??                                    	   mov [bx], 3620; mi (E4)
+[ 428]    0358: ??                                    	   jmp ply_snd
+[ 429]    035A:                                       	freq_key_5:
+[ 430]    035A: ??                                    	   mov bx, offset frequency
+[ 431]    035D: ??                                    	   mov [bx], 3417; fa (F4)
+[ 432]    0361: ??                                    	   jmp ply_snd
+[ 433]    0363:                                       	freq_key_6:
+[ 434]    0363: ??                                    	   mov bx, offset frequency
+[ 435]    0366: ??                                    	   mov [bx], 3225; fa# (F4#)
+[ 436]    036A: ??                                    	   jmp ply_snd
+[ 437]    036C:                                       	freq_key_7:
+[ 438]    036C: ??                                    	   mov bx, offset frequency
+[ 439]    036F: ??                                    	   mov [bx], 3044; sol (G4)
+[ 440]    0373: ??                                    	   jmp ply_snd
+[ 441]    0375:                                       	freq_key_8:
+[ 442]    0375: ??                                    	   mov bx, offset frequency
+[ 443]    0378: ??                                    	   mov [bx], 2873; sol# (G4#)
+[ 444]    037C: ??                                    	   jmp ply_snd
+[ 445]    037E:                                       	freq_key_9:
+[ 446]    037E: ??                                    	   mov bx, offset frequency
+[ 447]    0381: ??                                    	   mov [bx], 2712; la (A4)
+[ 448]    0385: ??                                    	   jmp ply_snd
+[ 449]    0387:                                       	freq_key_10:
+[ 450]    0387: ??                                    	   mov bx, offset frequency
+[ 451]    038A: ??                                    	   mov [bx], 2560; la# (A4#)
+[ 452]    038E: ??                                    	   jmp ply_snd
+[ 453]    0390:                                       	freq_key_11:
+[ 454]    0390: ??                                    	   mov bx, offset frequency
+[ 455]    0393: ??                                    	   mov [bx], 2416; si (B4)
+[ 456]    0397: ??                                    	   jmp ply_snd
+[ 457]        :                                       			
+[ 458]    0399:                                       	ply_snd:
+[ 459]    0399: ??                                    	    MOV     DX,10000         ; Number of times to repeat whole routine.
+[ 460]        :                                       
+[ 461]    039C: ??                                    	MOV     BX, offset frequency           ; Frequency value.
+[ 462]        :                                       
+[ 463]    039F: ??                                    	MOV     AL, 10110110B    ; The Magic Number (use this binary number only)
+[ 464]    03A1: ??                                    	OUT     43H, AL          ; Send it to the initializing port 43H Timer 2.
+[ 465]        :                                       
+[ 466]    03A3:                                       	NEXT_FREQUENCY:          ; This is were we will jump back to 2000 times.
+[ 467]        :                                       
+[ 468]    03A3: ??                                    	MOV     AX, [BX]           ; Move our Frequency value into AX.
+[ 469]        :                                       
+[ 470]    03A5: ??                                    	OUT     42H, AL          ; Send LSB to port 42H.
+[ 471]    03A7: ??                                    	MOV     AL, AH           ; Move MSB into AL
+[ 472]    03A9: ??                                    	OUT     42H, AL          ; Send MSB to port 42H.
+[ 473]        :                                       
+[ 474]    03AB: ??                                    	IN      AL, 61H          ; Get current value of port 61H.
+[ 475]    03AD: ??                                    	OR      AL, 00000011B    ; OR AL to this value, forcing first two bits high.
+[ 476]    03AF: ??                                    	OUT     61H, AL          ; Copy it to port 61H of the PPI Chip
+[ 477]        :                                       							 ; to turn ON the speaker.
+[ 478]        :                                       
+[ 479]    03B1: ??                                    	MOV     CX, 100          ; Repeat loop 100 times
+[ 480]    03B4:                                       	DELAY_LOOP:              ; Here is where we loop back too.
+[ 481]    03B4: ??                                    	LOOP    DELAY_LOOP       ; Jump repeatedly to DELAY_LOOP until CX = 0
+[ 482]        :                                       
+[ 483]    03B6: ??                                    	DEC     DX               ; Decrement repeat routine count
+[ 484]        :                                       
+[ 485]    03B7: ??                                    	CMP     DX, 0            ; Is DX (repeat count) = to 0
+[ 486]    03BA: ??                                    	JNZ     NEXT_FREQUENCY   ; If not jump to NEXT_FREQUENCY
+[ 487]        :                                       							 ; and do whole routine again.
+[ 488]        :                                       
+[ 489]        :                                       							 ; Else DX = 0 time to turn speaker OFF
+[ 490]        :                                       
+[ 491]    03BC: ??                                    	IN      AL,61H           ; Get current value of port 61H.
+[ 492]    03BE: ??                                    	AND     AL,11111100B     ; AND AL to this value, forcing first two bits low.
+[ 493]    03C0: ??                                    	OUT     61H,AL           ; Copy it to port 61H of the PPI Chip
+[ 494]    03C2: ??                                    	ret
+[ 495]        :                                       play_sound_freq ENDP
+[ 496]        :                                       
+[ 497]    03C3: ??                                    color db 00001111b
+[ 498]    03C4: ??                                    column db 0 ; must change value in code to display other touch
+[ 499]    03C5: ??                                    row db 0
+[ 500]    03C6: ??                                    key_off db 0
+[ 501]    03C7: ??                                    pressed_key db 12h
+[ 502]    03C8: ??                                    frequency dw 12h
+[ 503]    03CA: ??                                    next_key db 12h
+[ 504]    03CB: ??                                    piece1 db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
+[ 505]    03F8: ??                                    msg1 db " PIaNOS "
+[ 506]    0400:                                       msg1end:
+[ 507]    0400: ??                                    menu1 db "F1   Free-To-play"
+[ 508]    0411:                                       menu1end:
+[ 509]    0411: ??                                    menu2 db "F2   Play a piece"
+[ 510]    0422:                                       menu2end:
+[ 511]    0422: ??                                    menu3 db "F3   Watch me play"
+[ 512]    0434:                                       menu3end:
+[ 513]    0434: ??                                    menu4 db "ESC  Exit"
+[ 514]    043D:                                       menu4end:
+[ 515]    043D: ??                                    menu5 db "Please read the user manual before playing"
+[ 516]    0467:                                       menu5end:
+[ 517]    0467: ??                                    pap1 db "Choose a piece: "
+[ 518]    0477:                                       pap1end:
+[ 519]    0477: ??                                    pap2 db "F1   By night, in the moonlight"
+[ 520]    0496:                                       pap2end:
+[ 521]    0496: ??                                    pap3 db "More releases in the future!"
+[ 522]    04B2:                                       pap3end:
+[ 523]    04B2: ??                                    pap4 db "ESC Main Menu"
+[ 524]    04BF:                                       pap4end:
+[ 525]        :                                       
  
 ===================================================================================================
  
