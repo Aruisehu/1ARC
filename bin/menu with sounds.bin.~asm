@@ -1,8 +1,6 @@
 org 7e10h
 
 
-mov ax, 1000h
-mov ss, ax; move the stack location in memory
 ;Main Menu
 ;Use F1, F2, F3 to select the mode
 ;Escape to quit program
@@ -126,7 +124,7 @@ mov ah, 0
 int 16h ;menu "Pick a song"
 cmp ah, 3Bh
 jne other1
-mov bx, offset piece1[0]
+mov bx, offset piece1
 push bx
 je play
 other1:
@@ -137,13 +135,13 @@ other2:
 jmp menupap ; if invalid key, wait for a valid one
 ;piano plays with azertyuiop^$
 play:
-pop bx
 mov al, ' ' ; character to print
 mov bl, 00001001b; set the color (4 MSB -> background color, 4 LSB-> foreground color)
 mov bh, 0 ; print on  page 1
 mov cx, 4000 ; number of character to print
 mov ah, 9 ; prepare interruption
 call print_piano
+pop bx
 beginp:
 mov cl, 11
 press_key1:
