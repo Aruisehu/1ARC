@@ -2,7 +2,7 @@ EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
  
 bootstrap.bin -- emu8086 assembler version: 4.08  
  
-[ 06/06/2016  --  16:00:03 ] 
+[ 06/06/2016  --  20:46:42 ] 
  
 ===================================================================================================
 [LINE]     LOC: MACHINE CODE                          SOURCE
@@ -21,7 +21,7 @@ bootstrap.bin -- emu8086 assembler version: 4.08
 [  11]    7C0F: B6 00                                 mov dh, 0h ; Head Number
 [  12]    7C11: B5 00                                 mov ch, 0h ; Cylinder number
 [  13]    7C13: B1 02                                 mov cl, 2h ; Sector Number
-[  14]    7C15: B0 03                                 mov al, 3 ; Number of sector to load
+[  14]    7C15: B0 05                                 mov al, 5 ; Number of sector to load
 [  15]    7C17: B4 02                                 mov ah, 2 ; set the interruption mode
 [  16]    7C19: CD 13                                 int 13h   ; Load code pointed in RAM
 [  17]    7C1B: 73 02                                 jnc exit

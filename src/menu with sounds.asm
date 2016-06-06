@@ -124,22 +124,18 @@ menupap:
     int 16h ;menu "Pick a song"
     cmp ah, 3Bh
     jne other1
-    mov bx, offset piece1
+    mov bx, offset piece
     push bx
     je play
     other1:
     cmp ah, 1h
     jne other2
-    ret
+    jmp main
     other2:
     jmp menupap ; if invalid key, wait for a valid one 
     ;piano plays with azertyuiop^$
     play:
-    mov al, ' ' ; character to print
-    mov bl, 00001001b; set the color (4 MSB -> background color, 4 LSB-> foreground color)
-    mov bh, 0 ; print on  page 1 
-    mov cx, 4000 ; number of character to print
-    mov ah, 9 ; prepare interruption
+    call refresh
     call print_piano
     pop bx
     beginp:
@@ -183,6 +179,14 @@ wmp:
 ;call watch_me_play ; doesn't exist for now
 jmp main 
 
+color db 00001111b
+column db 0 ; must change value in code to display other touch
+row db 0 
+key_off db 0
+pressed_key db 12h
+frequency dw 12h
+next_key db 12h
+piece db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
 refresh PROC
     ;use to make the screen white 
     mov cl, 26
@@ -492,14 +496,7 @@ play_sound_freq PROC
 	ret
 play_sound_freq ENDP
 
-color db 00001111b
-column db 0 ; must change value in code to display other touch
-row db 0 
-key_off db 0
-pressed_key db 12h
-frequency dw 12h
-next_key db 12h
-piece1 db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
+
 msg1 db " PIaNOS "
 msg1end: 
 menu1 db "F1   Free-To-play"
