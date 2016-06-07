@@ -1,6 +1,7 @@
 org 7e10h
 
-
+push es
+pop ds
 ;Main Menu
 ;Use F1, F2, F3 to select the mode
 ;Escape to quit program
@@ -61,16 +62,6 @@ je pap
 cmp ah, 3Dh
 je wmp
 jne main
-
-color db 00001111b
-column db 0 ; must change value in code to display other touch
-row db 0 
-key_off db 0
-pressed_key db 9h
-frequency dw 12h
-next_key db 12h
-piece db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
-num_piece db 0
 
 ftp:
 call refresh
@@ -175,7 +166,14 @@ wmp:
 ;call watch_me_play ; doesn't exist for now
 jmp main 
 
-
+color db 00001111b
+column db 0 ; must change value in code to display other touch
+row db 0 
+key_off db 0
+pressed_key db 9h
+frequency dw 12h
+next_key db 12h
+piece db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
 refresh PROC
     ;use to make the screen white 
     mov cl, 26
