@@ -15,7 +15,8 @@ mov al, 5 ; Number of sector to load
 mov ah, 2 ; set the interruption mode
 int 13h   ; Load code pointed in RAM 
 jnc exit
-jmp boot  ; else retry
+jmp boot
+
 
 exit:
 jmp 0000:7e10h ;jump to the code we load
@@ -23,5 +24,8 @@ ret
 
 db 504-(offset exit-offset boot) dup (00h) ; Put 0 in the memory
 dw 0xAA55 ; Way to stop bootstrap  
+
+
+
 
 

@@ -1,6 +1,6 @@
 org 7e10h
 
-  
+
 ;Main Menu
 ;Use F1, F2, F3 to select the mode
 ;Escape to quit program
@@ -53,7 +53,7 @@ int 10h
 mov ah, 0
 int 16h
 cmp ah, 1
-je fin
+je main
 cmp ah, 3Bh
 je ftp
 cmp ah, 3Ch
@@ -62,17 +62,18 @@ cmp ah, 3Dh
 je wmp
 jne main
 
-
-fin:
-int 20h
+color db 00001111b
+column db 0 ; must change value in code to display other touch
+row db 0 
+key_off db 0
+pressed_key db 9h
+frequency dw 12h
+next_key db 12h
+piece db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
+num_piece db 0
 
 ftp:
 call refresh
-mov al, ' ' ; character to print
-mov bl, 00001001b; set the color (4 MSB -> background color, 4 LSB-> foreground color)
-mov bh, 0 ; print on  page 1 
-mov cx, 4000 ; number of character to print
-mov ah, 9 ; prepare interruption
 press_key:
     call print_piano
     mov ah, 0
@@ -92,11 +93,6 @@ jmp main
 
 pap:
 call refresh 
-mov al, ' ' ; character to print
-mov bl, 00001001b; set the color (4 MSB -> background color, 4 LSB-> foreground color)
-mov bh, 0 ; print on  page 1 
-mov cx, 4000 ; number of character to print
-mov ah, 9 ; prepare interruption
 menupap: 
     mov al, 1 
     mov bh, 0 
@@ -122,7 +118,7 @@ menupap:
     int 10h  
     mov ah, 0
     int 16h ;menu "Pick a song"
-    cmp ah, 3Bh
+    cmp ah, 10h
     jne other1
     mov bx, offset piece
     push bx
@@ -179,14 +175,7 @@ wmp:
 ;call watch_me_play ; doesn't exist for now
 jmp main 
 
-color db 00001111b
-column db 0 ; must change value in code to display other touch
-row db 0 
-key_off db 0
-pressed_key db 12h
-frequency dw 12h
-next_key db 12h
-piece db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
+
 refresh PROC
     ;use to make the screen white 
     mov cl, 26
@@ -495,8 +484,7 @@ play_sound_freq PROC
     	OUT     61H,AL           ; Copy it to port 61H of the PPI Chip 
 	ret
 play_sound_freq ENDP
-
-
+  
 msg1 db " PIaNOS "
 msg1end: 
 menu1 db "F1   Free-To-play"
@@ -516,4 +504,4 @@ pap2end:
 pap3 db "More releases in the future!"
 pap3end:
 pap4 db "ESC Main Menu"
-pap4end:
+pap4end:  ; else retry
