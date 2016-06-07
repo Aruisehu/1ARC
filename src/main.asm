@@ -39,22 +39,15 @@ mov cx, menu3end - offset menu3; calculate message size.
 mov dh, 7
 mov bp, offset menu3
 int 10h
-	
-mov cx, menu4end - offset menu4; calculate message size. 
-mov dh, 11
-mov bp, offset menu4
-int 10h 
 
-mov cx, menu5end - offset menu5; calculate message size. 
-mov dh, 14
+mov cx, menu4end - offset menu4; calculate message size. 
+mov dh, 10
 mov dl, 0
-mov bp, offset menu5
+mov bp, offset menu4
 int 10h
 	
 mov ah, 0
 int 16h
-cmp ah, 1
-je main
 cmp ah, 3Bh
 je ftp
 cmp ah, 3Ch
@@ -109,7 +102,7 @@ menupap:
     int 10h  
     mov ah, 0
     int 16h ;menu "Pick a song"
-    cmp ah, 10h
+    cmp ah, 3Bh
     jne other1
     mov bx, offset piece
     push bx
@@ -122,7 +115,6 @@ menupap:
     jmp menupap ; if invalid key, wait for a valid one 
     ;piano plays with azertyuiop^$
     play:
-    call refresh
     call print_piano
     pop bx
     beginp:
@@ -189,7 +181,7 @@ menuwmp:
     int 10h  
     mov ah, 0
     int 16h ;menu "Pick a song"
-    cmp ah, 10h
+    cmp ah, 3Bh
     jne wmp_key
     mov bx, offset piece
     push bx 
@@ -205,7 +197,6 @@ menuwmp:
     jmp menuwmp ; if invalid key, wait for a valid one 
     ;piano plays with azertyuiop^$
     wmp_play:
-    call refresh
     call print_piano
     pop bx
     beginw:
@@ -225,16 +216,24 @@ menuwmp:
     pop bx
     next_w:
     cmp cl, 0
-    je piano
+    je piano_w
     dec cl
     jmp press_key2
     ; afficher touche + son
+    piano_w:
     mov dx, [bx]
     push bx
     mov bx, offset pressed_key
     mov [bx], dx
     call print_piano
     call play_sound_freq
+    mov bx, offset pressed_key
+    mov [bx], 12h
+    call print_piano
+    mov cx, 07h
+    mov dx, 0A120h
+    mov ah, 86h
+    int 15h
     pop bx
     inc bx
     jmp beginw
@@ -278,7 +277,22 @@ print_next PROC
 print_next ENDP
     
 print_piano PROC
-    call refresh
+    mov cl, 26
+    xor bx, bx ;put bx to 0
+    rowrp:
+    dec cl
+    mov dh, cl
+    mov dl, 0
+    mov ah, 2
+    int 10h
+    mov al, ' ' ; character to print
+    push cx
+    mov cx, 80 ; number of character to print
+    mov ah, 9 ; prepare interruption
+    int 10h 
+    pop cx
+    cmp cl, 0
+    jne rowrp
     mov bx, offset column
     mov [bx], 0
     mov bx, offset key_off
@@ -557,11 +571,9 @@ menu1end:
 menu2 db "F2   Play a piece"
 menu2end:
 menu3 db "F3   Watch me play"
-menu3end:
-menu4 db "ESC  Exit" 
-menu4end: 
-menu5 db "Please read the user manual before playing" 
-menu5end:
+menu3end: 
+menu4 db "Please read the user manual before playing" 
+menu4end:
 pap1 db "Choose a piece: "
 pap1end: 
 pap2 db "F1   By night, in the moonlight"
