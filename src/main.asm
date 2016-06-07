@@ -163,8 +163,83 @@ menupap:
 jmp main 
 
 wmp:
-;call watch_me_play ; doesn't exist for now
-jmp main 
+call refresh 
+menuwmp: 
+    mov al, 1 
+    mov bh, 0 
+    mov bl, 0000_1111b ; choose the color
+    mov cx, pap1end - offset pap1 ; calculate message size. 
+    mov dl, 25; select the column where to print the message
+    mov dh, 0 ; select the row
+    mov bp, offset pap1; select the string to be print
+    mov ah, 13h ; print the string pointed by es:bp
+    int 10h
+    mov cx, pap2end - offset pap2 ; calculate message size. 
+    mov dl, 3
+    mov dh, 3
+    mov bp, offset pap2
+    int 10h
+    mov cx, pap3end - offset pap3 ; calculate message size. 
+    mov dh, 5
+    mov bp, offset pap3
+    int 10h
+    mov cx, pap4end - offset pap4 ; calculate message size. 
+    mov dh, 7
+    mov bp, offset pap4
+    int 10h  
+    mov ah, 0
+    int 16h ;menu "Pick a song"
+    cmp ah, 10h
+    jne wmp_key
+    mov bx, offset piece
+    push bx 
+
+    je wmp_play
+    
+    ;back to menu if esc is pressed
+    wmp_key:
+    cmp ah, 1h
+    jne wmp_invalid_key
+    jmp main
+    wmp_invalid_key:
+    jmp menuwmp ; if invalid key, wait for a valid one 
+    ;piano plays with azertyuiop^$
+    wmp_play:
+    call refresh
+    call print_piano
+    pop bx
+    beginw:
+    mov cl, 11
+    press_key1:
+    cmp [bx], 13
+    je end_play_w
+    cmp [bx], cl
+    jne next
+    mov al, cl
+    mov dl, 6
+    mul dl
+    push bx
+    push cx
+    call print_next
+    pop cx 
+    pop bx
+    next:
+    cmp cl, 0
+    je piano
+    dec cl
+    jmp press_key1
+    ; afficher touche + son
+    mov dx, [bx]
+    push bx
+    mov bx, offset pressed_key
+    mov [bx], dx
+    call print_piano
+    call play_sound_freq
+    pop bx
+    inc bx
+    jmp beginw
+    end_play_w: 
+jmp main
 
 color db 00001111b
 column db 0 ; must change value in code to display other touch
