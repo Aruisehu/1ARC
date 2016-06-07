@@ -210,11 +210,11 @@ menuwmp:
     pop bx
     beginw:
     mov cl, 11
-    press_key1:
+    press_key2:
     cmp [bx], 13
     je end_play_w
     cmp [bx], cl
-    jne next
+    jne next_w
     mov al, cl
     mov dl, 6
     mul dl
@@ -223,11 +223,11 @@ menuwmp:
     call print_next
     pop cx 
     pop bx
-    next:
+    next_w:
     cmp cl, 0
     je piano
     dec cl
-    jmp press_key1
+    jmp press_key2
     ; afficher touche + son
     mov dx, [bx]
     push bx
@@ -241,14 +241,6 @@ menuwmp:
     end_play_w: 
 jmp main
 
-color db 00001111b
-column db 0 ; must change value in code to display other touch
-row db 0 
-key_off db 0
-pressed_key db 9h
-frequency dw 12h
-next_key db 12h
-piece db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
 refresh PROC
     ;use to make the screen white 
     mov cl, 26
@@ -577,4 +569,12 @@ pap2end:
 pap3 db "More releases in the future!"
 pap3end:
 pap4 db "ESC Main Menu"
-pap4end:  ; else retry
+pap4end: 
+color db 00001111b
+column db 0 ; must change value in code to display other touch
+row db 0 
+key_off db 0
+pressed_key db 9h
+frequency dw 12h
+next_key db 12h
+piece db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
