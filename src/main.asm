@@ -24,6 +24,7 @@ mov bp, offset msg1; select the string to be print
 mov ah, 13h ; print the string pointed by es:bp
 int 10h  
 	; don't need to change ah value, so we are doing exactly the same thing
+	; do it again, 3 times
 mov cx, menu1end - offset menu1 ; calculate message size. 
 mov dl, 3
 mov dh, 3
@@ -45,38 +46,38 @@ mov dh, 10
 mov dl, 0
 mov bp, offset menu4
 int 10h
-	
+;interaction in menu	
 mov ah, 0
 int 16h
-cmp ah, 3Bh
-je ftp
-cmp ah, 3Ch
-je pap
-cmp ah, 3Dh
-je wmp
-jne main
+cmp ah, 3Bh ; user pressed F1
+je ftp ; go to free to play
+cmp ah, 3Ch ; user pressed F2
+je pap ; go to play a piece
+cmp ah, 3Dh ; user pressed F3
+je wmp ;go to watch me play
+jne main ; user doesn't press a correct key
 
 ftp:
-call refresh
+call refresh ; make the screen blank
 press_key:
     call print_piano
     mov ah, 0
     int 16h ; wait for a pressed key
     mov bx, offset pressed_key
-    cmp ah, 1 ; escape pressed, we quit the program
+    cmp ah, 1 ; escape pressed, we go back to menu
     je end_free
     sub ah, 10h
     cmp ah, 12
     jge press_key ;user doesn't press the right key
-    mov [bx], ah
+    mov [bx], ah ; put the pressed key in the pressed_key variable
     call print_piano
-	call play_sound_freq
-    jmp press_key
+	call play_sound_freq ; play sound
+    jmp press_key ; loop
     end_free:
 jmp main
 
 pap:
-call refresh 
+call refresh ; make the screen blank
 menupap: 
     mov al, 1 
     mov bh, 0 
@@ -87,6 +88,7 @@ menupap:
     mov bp, offset pap1; select the string to be print
     mov ah, 13h ; print the string pointed by es:bp
     int 10h
+    ; do it again 3 times
     mov cx, pap2end - offset pap2 ; calculate message size. 
     mov dl, 3
     mov dh, 3
@@ -99,64 +101,66 @@ menupap:
     mov cx, pap4end - offset pap4 ; calculate message size. 
     mov dh, 7
     mov bp, offset pap4
-    int 10h  
+    int 10h
+    ; interaction  
     mov ah, 0
     int 16h ;menu "Pick a song"
-    cmp ah, 3Bh
+    cmp ah, 3Bh ; press F1, choose piece n°1
     jne other1
-    mov bx, offset piece
-    push bx
-    je play
+    mov bx, offset piece ; choose the piece n°1
+    push bx ;put this pointer in the stack
+    je play ;go to play
     other1:
-    cmp ah, 1h
+    cmp ah, 1h ; escape pressed: leave to main menu
     jne other2
     jmp main
     other2:
     jmp menupap ; if invalid key, wait for a valid one 
     ;piano plays with azertyuiop^$
     play:
-    call print_piano
-    pop bx
+    call print_piano ; print piano
+    pop bx ; restore the pointer of the chosen piece
     beginp:
-    mov cl, 11
+    mov cl, 11 ; check which key is next (do it with loop)
     press_key1:
-    cmp [bx], 13
-    je end_play
-    cmp [bx], cl
-    jne next
+    cmp [bx], 13 ; if 13: the piece is done
+    je end_play ; back to main menu
+    cmp [bx], cl ; look if the current key point by cl is the next key to press
+    jne next ; if not decrements cl and loop
     mov al, cl
     mov dl, 6
-    mul dl
-    push bx
-    push cx
+    mul dl ; multiply the key by 6 (so al*dl) results store in ax
+    push bx ; store the pointer of piece in stack
+    push cx ; store counter in stack
     call print_next
-    pop cx 
-    pop bx
+    pop cx ; restore counter value (FIFO stack)
+    pop bx ; restore piece pointer
     next:
-    cmp cl, 0
+    cmp cl, 0 ; If loop finished go to piano
     je piano
     dec cl
-    jmp press_key1
+    jmp press_key1 ; loop
     piano:
     mov ah, 0
     int 16h ; wait for a pressed key
-    push bx
+    push bx ; store the pointer of piece in stack
     mov bx, offset pressed_key
     cmp ah, 1 ; escape pressed, we quit the program
     je end_play
     sub ah, 10h
-    mov [bx], ah
+    mov [bx], ah ; stock the pressed key in pressed_key var
     call print_piano
-    call play_sound_freq
-    pop bx
-    inc bx
-    jmp beginp
+    call play_sound_freq  ; play sound
+    pop bx ; restore piece pointer
+    inc bx ; point to the next key to press
+    jmp beginp ; loop
     end_play: 
 jmp main 
 
 wmp:
-call refresh 
-menuwmp: 
+call refresh ; make screen all black
+menuwmp:
+; same as pap 
     mov al, 1 
     mov bh, 0 
     mov bl, 0000_1111b ; choose the color
@@ -198,7 +202,7 @@ menuwmp:
     ;piano plays with azertyuiop^$
     wmp_play:
     call print_piano
-    pop bx
+    pop bx ; restore piece pointer
     beginw:
     mov cl, 11
     press_key2:
@@ -218,25 +222,25 @@ menuwmp:
     cmp cl, 0
     je piano_w
     dec cl
-    jmp press_key2
-    ; afficher touche + son
+    jmp press_key2 ; same as play a piece
+    ; display key + sound
     piano_w:
     mov dx, [bx]
-    push bx
+    push bx ; store the value of the key to be pressed
     mov bx, offset pressed_key
-    mov [bx], dx
+    mov [bx], dx ; make the computer press the right key
     call print_piano
-    call play_sound_freq
+    call play_sound_freq ; play sound
     mov bx, offset pressed_key
-    mov [bx], 12h
-    call print_piano
+    mov [bx], 12h ; looks like the key is released
+    call print_piano ; print piano to see the effect
     mov cx, 07h
     mov dx, 0A120h
     mov ah, 86h
-    int 15h
-    pop bx
-    inc bx
-    jmp beginw
+    int 15h ; wait 0.5 second
+    pop bx ;restore piece pointer value
+    inc bx ; go see the next key to print
+    jmp beginw ; loop
     end_play_w: 
 jmp main
 
