@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<Foundry>
+<VM>
+<VMId type="string">52 ce e8 0f 9d 90 f1 71-8d 8c 28 dd 8f 1b 13 a6</VMId>
+<ClientMetaData>
+<clientMetaDataAttributes/>
+<HistoryEventList/></ClientMetaData>
+<vmxPathName type="string">PIaNOS.vmx</vmxPathName></VM></Foundry>
