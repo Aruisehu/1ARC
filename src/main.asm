@@ -102,6 +102,10 @@ menupap:
     mov dh, 7
     mov bp, offset pap4
     int 10h
+    mov cx, pap5end - offset pap5 ; calculate message size. 
+    mov dh, 9
+    mov bp, offset pap5
+    int 10h
     ; interaction  
     mov ah, 0
     int 16h ;menu "Pick a song"
@@ -111,6 +115,13 @@ menupap:
     push bx ;put this pointer in the stack
     je play ;go to play
     other1:
+    cmp ah, 3Ch
+    jne pap_esc
+    mov bx, offset piece2
+    push bx
+    je play
+    ;back to menu if esc is pressed
+    pap_esc:
     cmp ah, 1h ; escape pressed: leave to main menu
     jne other2
     jmp main
@@ -182,6 +193,10 @@ menuwmp:
     mov cx, pap4end - offset pap4 ; calculate message size. 
     mov dh, 7
     mov bp, offset pap4
+    int 10h
+    mov cx, pap5end - offset pap5 ; calculate message size. 
+    mov dh, 9
+    mov bp, offset pap5
     int 10h  
     mov ah, 0
     int 16h ;menu "Pick a song"
@@ -191,9 +206,15 @@ menuwmp:
     push bx 
 
     je wmp_play
-    
-    ;back to menu if esc is pressed
+ 
     wmp_key:
+    cmp ah, 3Ch
+    jne wmp_esc
+    mov bx, offset piece2
+    push bx
+    je wmp_play
+    ;back to menu if esc is pressed
+    wmp_esc:
     cmp ah, 1h
     jne wmp_invalid_key
     jmp main
@@ -582,10 +603,12 @@ pap1 db "Choose a piece: "
 pap1end: 
 pap2 db "F1   By night, in the moonlight"
 pap2end:
-pap3 db "More releases in the future!"
+pap3 db "F2   Ode To Joy - Beethoven"
 pap3end:
-pap4 db "ESC Main Menu"
-pap4end: 
+pap4 db "More releases in the future!"
+pap4end:
+pap5 db "ESC Main Menu"
+pap5end: 
 color db 00001111b
 column db 0 ; must change value in code to display other touch
 row db 0 
@@ -594,3 +617,4 @@ pressed_key db 9h
 frequency dw 12h
 next_key db 12h
 piece db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
+piece2 db 4,4,5,7,7,5,4,2,0,0,2,4,4,2,2,4,4,5,7,7,5,4,2,0,0,2,4,2,0,0,13
