@@ -46,6 +46,12 @@ mov dh, 10
 mov dl, 0
 mov bp, offset menu4
 int 10h
+
+mov cx, menu5end - offset menu5; calculate message size. 
+mov dh, 23
+mov dl, 0
+mov bp, offset menu5
+int 10h
 ;interaction in menu	
 mov ah, 0
 int 16h
@@ -591,29 +597,31 @@ play_sound_freq ENDP
   
 msg1 db " PIaNOS "
 msg1end: 
-menu1 db "F1   Free-To-play"
+menu1 db "F1   Jeu Libre"
 menu1end:
-menu2 db "F2   Play a piece"
+menu2 db "F2   Joue une musique"
 menu2end:
-menu3 db "F3   Watch me play"
+menu3 db "F3   Regarde-moi jouer"
 menu3end: 
-menu4 db "Please read the user manual before playing" 
-menu4end:
-pap1 db "Choose a piece: "
+menu4 db "Veuillez lire le manuel utilisateur" 
+menu4end: 
+menu5 db "Fait par Kevin Baumeyer Sebastien Erfani Robin Biechy et Yohann Jolain" 
+menu5end:
+pap1 db "Choisissez une musique: "
 pap1end: 
-pap2 db "F1   By night, in the moonlight"
+pap2 db "F1   Au clair de la lune"
 pap2end:
-pap3 db "F2   Ode To Joy - Beethoven"
+pap3 db "F2   Ode a la joie - Beethoven"
 pap3end:
-pap4 db "More releases in the future!"
+pap4 db "Plus dans le future!"
 pap4end:
-pap5 db "ESC Main Menu"
+pap5 db "ESC Menu Principal"
 pap5end: 
 color db 00001111b
 column db 0 ; must change value in code to display other touch
 row db 0 
 key_off db 0
-pressed_key db 9h
+pressed_key db 12h
 frequency dw 12h
 next_key db 12h
 piece db 5,5,5,7,9,7,5,9,7,7,5,5,5,5,7,9,7,5,9,7,7,5,7,7,7,7,2,2,7,5,4,2,0,5,5,5,7,9,7,5,9,7,7,5,13
