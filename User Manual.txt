@@ -1,0 +1,50 @@
+User Manual
+
+English
+--------------------------------------------------------------------------------------------------------------------------------------
+
+PIaNOS is a x86 compatible software not dependent of an operating system. We recommend to start it on a virtual machine 
+(with the software VMWare Player or Workstation), but you can also install it on a drive (usb stick, floppy) but it’s more complicated.
+
+Go on the VMWare’s web site : https://www.vmware.com to download VMWare Player (free) and then install it.
+ Double click on the file PIaNOS.vmx (inside the folder “vm”) to start the VM. Choose ‘I copied it’ when VMWare ask “This virtual machine might have been …”. 
+
+When launched, you are on the main menu, which allows you to access the three modes of PIaNOS :
+	- Free to play : key F1, allow to play freely using the keys A, Z, E, R, T, Y, U, I, O, P, and ^ $.
+	- Play a piece : key F2, a menu allow to choose the piece (keys to choose are displayed on the screen). 
+	The computer will show on the screen witch key you should press using a blue stick. Keys are the same than the mod “Free to play”.
+	- Watch me play : key F3, a menu allow to choose the piece (keys to choose are displayed on the screen).
+	 The computer will play alone the piece, you just have to listen and watch. 
+Press the "Esc" key to return to the main menu.
+
+To shut down the VM click on the arrow left to the icon “pause”, then click on “Shutdown Guest”.
+If your mouse don't move, press at the same time CTRL key and ALT key
+If you installed and started the program on a drive, press the power button of your computer to shut down. 
+Then remove the drive to allow your computer to start normally.
+
+User Manual made by Kevin Baumeyer, Robin Biechy, Sebastien Erfani, Yohann Jolain
+
+Français
+--------------------------------------------------------------------------------------------------------------------------------------
+
+PIaNOS est un logiciel compatible x86 non dépendant d’un système d’exploitation. Nous vous recommandons de le démarrer sur une machine virtuel 
+(avec le logiciel VMvare Player ou Workstation), mais vous pouvez aussi l’installer sur un lecteur (clé USB ou disquette) mais cette manipulation est plus complexe.
+
+Rendez-vous sur le site de VMWare : https://www.vmware.com pour télécharger VMWare Player (gratuit) puis installez-le. 
+Double-cliquez sur le fichier PIaNOS.vmx se trouvant dans le dossier « vm » pour démarrer la VM.
+
+Une fois lancé vous arriverez sur le menu principal, qui vous permet d’accéder aux 3 modes de fonctionnement de PIaNOS :
+	- Jeu libre : touche F1, permet de jouer librement à l’aide des touches du clavier A, Z, E, R, T, Y, U, I, O, P, ^ et $.
+	- Joue une musique : touche F2, un menu permettra de choisir le morceau à jouer (les touches à utiliser pour choisir ce 
+	dernier sont affichées à l’écran). L’ordinateur indiquera à l’écran, via une bare bleue, sur quelle touche il faut appuyer, 
+	suivez ses indications. Les touches sont les mêmes que pour le mode « jeu libre ».
+	- Regardes moi jouer : touche F3, un menu permettra de choisir le morceau à jouer (les touches à utiliser pour choisir ce dernier sont affichées à l’écran). 
+	L’ordinateur jouera tout seul le morceau, vous avez juste à écouter et regarder.
+La touche « échap » permet de revenir sur le menu principal.
+
+Pour éteindre la VM cliquez sur la flèche à côté de l’icône pause, puis cliquez sur « Shutdown Guest ». 
+Si vous ne pouvez pas bouger votre souris, appuyez simultanément sur les touches CTRL et ALT. 
+Si vous avez installé et démarré le programme sur un lecteur, appuyer sur le bouton power de votre ordinateur. 
+Ensuite retirer votre lecteur pour que votre ordinateur démarre à nous normalement.
+
+Manuel Utilisateur fait par Kevin Baumeyer, Robin Biechy, Sebastien Erfani, Yohann Jolain
